@@ -1,0 +1,7 @@
+{% load store_tag %}
+{% for i in i %}
+<div class="product_box">
+    <div><strong>{{i.item.name}}</strong>&nbsp&nbsp&nbsp{% today_production i.item_id %}</div>
+    <div>{% today_production_tag i.item_id %}</div>
+</div>
+{% endfor %}

@@ -1,0 +1,19 @@
+**********************************
+142.93.213.54
+
+********** Create Virtual env *****
+
+virtualenv venv
+
+********** Activate Virtual env ****
+
+source venv/bin/activate
+
+
+***** install django ******
+
+pip install django
+
+*********** Deactivate Virtualenv *****
+
+deactivate

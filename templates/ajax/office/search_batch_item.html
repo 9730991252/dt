@@ -1,0 +1,17 @@
+<style>.filter_item{
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    padding: 5px;
+}</style>
+
+
+{% for p in s_p %}
+<div class="filter_item">
+    <div>{{p.name}}</div>
+    <div><form method="POST">{% csrf_token %}<input type="hidden" name="p_id" value="{{p.id}}"><button name="Select_Item" class="btn btn-primary btn-sm">Select</button></form></div>
+</div>
+{% endfor %}
