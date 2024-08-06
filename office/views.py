@@ -50,7 +50,7 @@ def employee(request):
             pin=request.POST.get('pin')
             department=request.POST.get('department')
             if Employee.objects.filter(mobile=mobile).exists():
-                messages.success(request,"Employee Allready Exits")
+                messages.warning(request,"Employee Allready Exits")
             else:
                 Employee(
                     name=name,

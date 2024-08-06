@@ -13,8 +13,8 @@
     .pd_box{
         background-color: rgb(192, 181, 255);
         font-weight: 600;
-        position: fixed;
-        top: 50px;
+        position: sticky;
+        top: 0;
     }
     .unused{
         background-color: RED;
@@ -43,9 +43,7 @@
         border: 1px solid black;
         margin-top: 10px;
     }
-    .qr_main_box{
-        margin-top: 150px;
-    }
+
     .inout{
         line-height: 10px;
         margin-bottom: 5px;
@@ -53,7 +51,7 @@
         padding: 10px;
     }
 </style>
-<div class="pd_box">
+<div class="pd_box mt-2 mb-2">
     <div class="pro_name">{{ba.product.product_name}}</div>
     <div class="dis_felx text-center">
         <div>Batch Name {{ba.batch_name}}</div>
@@ -65,8 +63,6 @@
         <div class="out_stock">Out Stock {{out_stock}}</div>
     </div>
 </div>
-
-
 
 <div class="qr_main_box">
 {% for q in qr_code %}
