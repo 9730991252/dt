@@ -2,11 +2,11 @@
 {% block title %} Office Dashboard{% endblock title %}
 {% block content %}
 <style>
-    *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+      *{
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+      }
 
     .sticky_footer{
         position: fixed;
@@ -22,50 +22,52 @@
         }
     }
     .tag_box{
-        text-align: center;
-        border: 2px solid black;
-        width:  2in;
-        height: 2in;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 3mm;
+      height: 1.96in;
+         width: 1.96in;
+         border: 1px solid rgb(0, 0, 0);
+         margin-bottom: 3mm;
+         margin-left: auto;
+         margin-right: auto;
+         text-align: center;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+      }
         #tag_nummber{
             font-size: 20px;
             font-weight: 700;
             letter-spacing: 1px;
         }
-    }
     img{
         height: 140px;
     }
 </style>
 <style media="print">
-    @page{
-    margin: 0in;
-    padding: 0in;
-    size: 2 2in;
-  }
+        @page{
+      margin: 0in;
+      padding: 0in;
+      size: 1.97 1.97in;
+    }
   .hide{
     display: none;
   }
   .tag_box{
-      border:none;
+    border: none;
   }
   </style>
 <div class="container employee_name hide">
     <div class=""><h>Welcome - {{e.name}}</h></div>
     <input type="hidden" value="{{e.id}}" id="eid" class="form-control" required>
 </div>
-<div class="container my-3">
+<div id="tag_result"></div>
+<div class="container">
     <div class="row">
         <div class="col-2 office_menu hide">
             {% include 'include/office_menu.html' %}  
         </div>
         <div class="col-10">
-            <div id="tag_result"></div>
-            <div id="tb_box"></div>
-            <br>
+            
+            <br class="hide">
             <!--* content -->
 
             <div class="container hide">
@@ -119,7 +121,7 @@
                   {% endif %}
                 </ul>
               </nav>
-    <br><br>
+    <br class="hide"><br class="hide">
 
             <div class="sticky_footer hide">
                 <input type="number" oninput="tag_limit()" id="tag_qty" class="form-control" placeholder="Tag Qty">
@@ -171,12 +173,12 @@
 
     function re_print(tag_number){
       $("#tag_result").empty();
-      temp = `<div class="tag_box">
-                <div>
-                    <div><img src="https://api.qrserver.com/v1/create-qr-code/?size=151x151&data=${tag_number}" ></div>
-                    <div style="display: flex; justify-content: center; gap: 10px;">Tag <h6 id="tag_nummber">${tag_number}</h6></div>
-                </div>
-              </div> `
+      temp = `    <div class="tag_box">
+        <div>
+            <div><img src="https://api.qrserver.com/v1/create-qr-code/?size=151x151&data=${tag_number}" ></div>
+            <div style="display: flex; justify-content: center; gap: 10px;">Tag <h6 id="tag_nummber">${tag_number}</h6></div>
+        </div>
+    </div> `
       $("#tag_result").html(temp);
   }
 
