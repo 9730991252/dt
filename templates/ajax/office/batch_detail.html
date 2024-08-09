@@ -16,12 +16,6 @@
         position: sticky;
         top: 0;
     }
-    .unused{
-        background-color: RED;
-        color: white;
-        border-radius: 5px;
-        padding: 5px;
-    }
     .instock{
         background-color: green;
         color: white;
@@ -52,13 +46,12 @@
     }
 </style>
 <div class="pd_box mt-2 mb-2">
-    <div class="pro_name">{{ba.product.product_name}}</div>
+    <div class="pro_name">{{ba.item.name}}</div>
     <div class="dis_felx text-center">
         <div>Batch Name {{ba.batch_name}}</div>
         <div>Start Date {{ba.date}}</div>
     </div>
     <div  class="dis_felx text-center">
-        <div class="unused">Un Used Tag {{un_used}}</div>
         <div class="instock">In Stock {{in_stock}}</div>
         <div class="out_stock">Out Stock {{out_stock}}</div>
     </div>

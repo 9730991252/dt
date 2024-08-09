@@ -1,0 +1,32 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<style>
+
+</style>
+<div class="container">
+    <div class=""><h>Welcome - {{e.name}}</h></div>
+</div>
+<div class="container my-3">
+    <div class="row">
+            <div class="col-2 ">
+                {% include 'include/office_menu.html' %}  
+            </div>
+            <div class="col-10">
+                {% include 'include/alert.html' %}
+
+                <div class="container">
+                    <div class="form_box row">
+                        <div class="col-5">
+                            <div><h6><b>Frome Date</b></h6></div>
+                            <input type="date" class="form-control" style="margin-left: auto;margin-right: auto; width: 200px;">
+                        </div>
+                        <div class="col-5">
+                            <div class="text-center"><h6><b>To Date</b></h6></div>
+                            <input type="date" class="form-control" style="margin-left: auto;margin-right: auto; width: 200px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock content %}

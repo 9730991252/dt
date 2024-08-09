@@ -69,7 +69,8 @@
     border-radius: 10px;
  }
  .product_main_box{
-    margin-bottom: 50px;
+    background-color: rgb(255, 231, 200);
+    border-radius: 10px;
 }
 .product_box{
      border-radius: 10px;
@@ -77,6 +78,7 @@
     margin-bottom: 10px;
     padding: 5px;
     text-align: center;
+
  }
  div.sticky {
   position: -webkit-sticky;
@@ -92,6 +94,8 @@
     <div class=""><h>Welcome - {{e.name}}</h></div>
     <input type="hidden" id="e_id" value="{{e.id}}">
     <input type="hidden" id="e_name" value="{{e.name}}">
+    <input type="hidden" id="b_id" value="{{b_id.id}}">
+    <input type="hidden" id="item_id" value="{{i.id}}">
     {% include 'include/alert.html' %}
     
 </div>
@@ -128,13 +132,10 @@
         <h6 class="todays_production">Todays Production </h6>
     </div>
     <div class="product_main_box container" id="todays_production">
-        {% for i in ti %}
-        <div class="product_box">
-            <div><strong><b>{{i.item.name}}</b></strong>&nbsp&nbsp&nbsp{% today_production i.item_id %}</div>
-            <div>{% today_production_tag i.item_id %}</div>
-        </div>
-        {% endfor %}
+            <div class="text-center"><b>{{i.name}} &nbsp;&nbsp;&nbsp; {% today_production_employee i.id e.id %}</b></div>
+            <div>{% today_production_in_tag i.id e.id %}</div>
     </div>
+    <br><br><br>
 </div>
 
 
@@ -155,6 +156,8 @@
 var count_ruselt = 0;
 var last_ruselt = 0;
 let e_name = document.getElementById('e_name').value;
+let b_id = document.getElementById('b_id').value;
+let item_id = document.getElementById('item_id').value;
 function onScanSuccess(c){
 
     if(c !== last_ruselt){
@@ -166,6 +169,8 @@ function onScanSuccess(c){
             data:{
                 tag_num:c,
                 e_id:document.getElementById('e_id').value,
+                b_id:b_id,
+                item_id:item_id
         },
         success: function(res){
             document.getElementById('last_ruselt').innerHTML=`${res.i_name}&nbsp&nbspTag&nbsp${c}`
@@ -201,6 +206,10 @@ function onScanSuccess(c){
                 speechSynthesis.speak(msg);
                 //fele_audio()
             }
+            else if (res.status == 3){
+                location.reload()
+            }
+
         }
             })
     }
@@ -233,13 +242,16 @@ var html5QrcodeScanner = new Html5QrcodeScanner(
             }
         })
     }
-    function in_item(c){
+    function in_item_manual(c){
+        
         $.ajax({
             url: "{% url 'in_item_manual' %}",
             method: "GET",
             data:{
                 tag_num:c,
                 e_id:document.getElementById('e_id').value,
+                b_id:b_id,
+                item_id:item_id
         },
         success: function(res){
             document.getElementById('last_ruselt').innerHTML=`${res.i_name}&nbsp&nbspTag&nbsp${c}`
@@ -250,9 +262,6 @@ var html5QrcodeScanner = new Html5QrcodeScanner(
                 setTimeout(function() {
                     $("#scan_border").removeClass('scan_box');
                 }, 2000);
-
-                $("#tag_result").empty();
-                document.getElementById('tag_num').value='';
             }
             else if(res.status == 0){
                 $("#scan_border").addClass('red_alert');
@@ -278,6 +287,10 @@ var html5QrcodeScanner = new Html5QrcodeScanner(
                 speechSynthesis.speak(msg);
                 //fele_audio()
             }
+            else if (res.status == 3){
+                location.reload()
+            }
+
         }
             })
     }

@@ -25,9 +25,9 @@ class Batch(models.Model):
 
 
 class Qr_code(models.Model):
-    item = models.ForeignKey(Item,on_delete=models.PROTECT,default=True)
-    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,default=True,null=True)
-    batch = models.ForeignKey(Batch,on_delete=models.PROTECT,default=True,null=True)
+    item = models.ForeignKey(Item,on_delete=models.PROTECT,null=True)
+    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,null=True)
+    batch = models.ForeignKey(Batch,on_delete=models.PROTECT,null=True)
     tag_number = models.IntegerField(unique=True)
     in_status = models.IntegerField(default=0)
     out_status = models.IntegerField(default=0)

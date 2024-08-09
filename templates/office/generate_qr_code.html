@@ -2,71 +2,34 @@
 {% block title %} Office Dashboard{% endblock title %}
 {% block content %}
 <style>
-*{
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    
-  .search_item{
-  display: flex;
-  background-color: rgb(171, 194, 252);
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  .search_input{
-    width: 50%;
-  }
-    }
-    .item{
-        border:1px solid rgba(0, 0, 0, 0.2);
-        margin-top: 10px;
-        font-weight: 600;
-        padding: 10px;
-        text-align: center;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        .item_foot{
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        h6{
-            font-size: 20px;
-            font-weight: 600;
-        }
-    }
-    .sel_pro{
-        h6{
-            font-weight: 700;
-            font-size: 18px;
-        }
-    }
-    .batch{
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        margin-bottom: 10px;
+
+    .sticky_footer{
+        position: fixed;
+        bottom: 0;
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        background-color: rgb(197, 197, 197);
+        padding: 5px;
         border-radius: 10px;
-        width: 400px;
-        padding: 10px;
-        margin-left: auto;
-        margin-right: auto;
+        input{
+            width: 200px;
+        }
     }
     .tag_box{
         text-align: center;
         border: 2px solid black;
-        width:  2.95in;
-        height: 1.962in;
+        width:  2in;
+        height: 2in;
         display: flex;
-        justify-content: space-between;
-        .name{
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .Qr_box{
-            display: flex;
-            align-items: center;
-        }
+        justify-content: center;
+        align-items: center;
+        margin: 3mm;
         #tag_nummber{
             font-size: 20px;
             font-weight: 700;
@@ -74,229 +37,148 @@
         }
     }
     img{
-        margin-right: 15px;
-        height: 125px;
-    }
-    .tn_box{
-        margin-left: 15px;
-        margin-top: 25px;
+        height: 140px;
     }
 </style>
 <style media="print">
-  @page{
-  margin: 0in;
-  padding: 0in;
-  size: 3.93 1.96in;
-
-}
-.office_menu,.employee_name,.search_item,.tb,.table,.in,.hide{
+    @page{
+    margin: 0in;
+    padding: 0in;
+    size: 2 2in;
+  }
+  .hide{
     display: none;
-}
-.tb_box{
-    size: 3.93 1.96in;
-    margin-bottom: 0in;
-}
-.tag_box{
-    border:none;
-    margin-top: -0.21in;
-}
-</style>
-<div class="container employee_name">
+  }
+  .tag_box{
+      border:none;
+  }
+  </style>
+<div class="container employee_name hide">
     <div class=""><h>Welcome - {{e.name}}</h></div>
     <input type="hidden" value="{{e.id}}" id="eid" class="form-control" required>
 </div>
 <div class="container my-3">
     <div class="row">
-        <div class="col-2 office_menu">
+        <div class="col-2 office_menu hide">
             {% include 'include/office_menu.html' %}  
         </div>
         <div class="col-10">
+            <div id="tag_result"></div>
+            <div id="tb_box"></div>
+            <br>
             <!--* content -->
-        <div class="text-center">
-            {% if p %}
-            <div class="sel_pro">
-                <div><h6>{{p.name}}</h6></div>
-                <div style="display: flex;justify-content: center;gap: 10px;">
-                    <div>{{p.category}}</div>
-                    <div>{{p.type}}</div>
+
+            <div class="container hide">
+                <div id="tag_list">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Tag Number</th>
+                        <th scope="col">Generate Date</th>
+                        <th scope="col">Generate By</th>
+                        <th scope="col">Used & Unused</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for qr in tag_list %}
+                      <tr>
+                        <td>{{qr.tag_number}}</td>
+                        <td>{{qr.generate_date}}</td>
+                        <td>{{qr.employee.name}}</td>
+                        <td> {% if qr.in_status == 1 %} <h6 class="text-success">Used</h6> {% else %}  <h6 class="text-danger">Un Used</h6> {% endif %}</td>
+                        <td><a class="btn btn-info" onclick="re_print('{{qr.tag_number}}')">Re Generate</a></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
                 </div>
             </div>
-            <hr>
-            {% for b in b %}
-            <div class="batch">
-                <div style="display: flex;justify-content: center;gap: 20px;">
-                    <div>{{b.sr_num}}</div>
-                    <div style="display: flex;justify-content: center;gap: 10px;"><p>Batch Name</p><strong>{{b.batch_name}}</strong></div>
-                    <div>{{b.date}}</div>
-                    <div>
-                        <form method="POST">
-                            <input type="hidden" value="{{b.id}}" name="bid" >
-                        <button class="btn btn-outline-success" name="Select_Batch" >select</button></div>
-                    </form>
-                </div>
-            </div>
-            {% endfor %}
-
-            
-            {% else %}
-            <h6 class="sasb">Search and select batch</h6>
-            {% endif %}
-        </div>
-
-        {% if pr == '' %}{% else %}
-        <style>
-            .sasb{
-                display: none;
-            }
-        </style>
-        {% endif %}
-
-
-
-        {% if ba %}
-        <div class="tb_box" id="tb_box">
-        <div class="tag_box">
-                <div>
-                    <div class="name mt-4 mb-2" style="margin-left: 15px;">{{pr.name}}</div>
-                    <div style="display: flex; justify-content: center; gap: 10px;">Tag <h6 id="tag_nummber"></h6></div>
-                    <input type="hidden" value="{{ba.id}}" id="batch_id">
-                </div>
-                <div class="Qr_box" >
-                    <div><img id="img" src="" ></div>
-                </div>
-        </div>
-    </div>
-<div id="multiple_result"></div>
-
-        <div class="hide">
-        <div class="border my-3 text-center tb" style="display: flex;align-items: center; gap: 10px;padding: 10px;">
-            <input  type="number" oninput="tag_limit()" style="width: 100px;border: 1px solid black; border-radius: 5px; margin-top: 10px;"  class="in form-control" placeholder="Tag qty" id="tag_qty" >
-            <a onclick="multiple_tage()" style="height: 40px; width: 200px;display: flex;justify-content: center;align-items: center;" id="create_btn" class="btn btn-success" >Create Tage</a>
-            <button class="btn btn-primary" id="print_btn" onclick="print_tag()" >Print</button>
-        </div>
-    </div>
-
-        <div class="container">
-            <div id="tag_list">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Sr Num</th>
-                    <th scope="col">Tag Number</th>
-                    <th scope="col">Generate Date</th>
-                    <th scope="col">Generate By</th>
-                    <th scope="col">Used & Unused</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% for qr in qr %}
-                  <tr>
-                    <td>{{qr.sr_num}}</td>
-                    <td>{{qr.tag_number}}</td>
-                    <td>{{qr.generate_date}}</td>
-                    <td>{{qr.employee.name}}</td>
-                    <td> {% if qr.in_status == 1 %} <h6 class="text-success">Used</h6> {% else %}  <h6 class="text-danger">Un Used</h6> {% endif %}</td>
-                    <td><a class="btn btn-info" onclick="re_print('{{qr.tag_number}}','{{qr.item.name}}')">Re Generate</a></td>
-                  </tr>
+            <nav aria-label="..." class="hide">
+                <ul class="pagination">
+                  {% if tag_list.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="/office/generate_qr_code?page=1" tabindex="-1">First</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="/office/generate_qr_code?page={{tag_list.previous_page_number}}" tabindex="-1">Previous</a>
+                  </li>
+                  {% endif %}
+  
+                  {% for n in total_page_list %}
+                  <li class="page-item"><a class="page-link" href="/office/generate_qr_code?page={{n}}">{{n}}</a></li>
                   {% endfor %}
-                </tbody>
-              </table>
+  
+                  {% if tag_list.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="/office/generate_qr_code?page={{tag_list.next_page_number}}">Next</a>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="/office/generate_qr_code?page={{last_page}}">Last</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav>
+    <br><br>
+
+            <div class="sticky_footer hide">
+                <input type="number" oninput="tag_limit()" id="tag_qty" class="form-control" placeholder="Tag Qty">
+                <button class="btn btn-success" onclick="generate_tag()" >Generate Tag</button>
+                <button class="btn btn-primary" onclick="print_tag()">Print</button>
             </div>
+            <!--// end content -->
         </div>
-
-
-        {% endif %}
-        
-
-                    <div id="item_result"></div>
-                    
-                    <div class="search_item">
-                        <div class="search_input"><input type="text" class="form-control" id="words" oninput="search_qr_item()"  placeholder="Search Item"></div>
-                      </div>
-                      <!--// end content -->
-    </div>
     </div>
 </div>
 
 <script>
+
+
     function tag_limit(){
         tag_qty = document.getElementById('tag_qty').value;
         if( tag_qty > 100){
             document.getElementById('tag_qty').value='';
         }
-
     }
-    function search_qr_item(){
-   words = document.getElementById('words').value;
-   $.ajax({
-       url: "{% url 'search_qr_item' %}",
-       method: "GET",
-       data:{
-           words:words,
-         
-       },
-        success: function(res){
-           $("#item_result").html(res.data);
-        }
-   })
-    }
-    function multiple_tage(){
-        batch_id = document.getElementById('batch_id').value;
-        eid = document.getElementById('eid').value;
+    function generate_tag(){
         tag_qty = document.getElementById('tag_qty').value;
         if (tag_qty == ''){
-            alert('Tag Qty required')
+          alert('Please Enter Value')
         }
+        eid = document.getElementById('eid').value;
         $.ajax({
-        url: "{% url 'multiple_tage' %}",
-        method: "GET",
-        data:{
-            batch_id:batch_id,
-            eid:eid,
-            tag_qty:tag_qty
-        },
-            success: function(res){
-                $("#multiple_result").html(res.tag);
-                $("#tag_list").html(res.t);
-                document.getElementById('tag_qty').value='';
-                if (res.status == 1){
-                    alert('This Batch Complite please create new batch ')
-                }
-                document.getElementById('tb_box').style.display='none';
+            url: "{% url 'generate_tag' %}",
+            method: "GET",
+            data:{
+                qty:tag_qty,
+                eid:eid
             
-            }
-   })
+            },
+             success: function(res){
+                document.getElementById('tag_qty').value='';
+                $("#tag_result").html(res.t);
+                $("#tag_list").html(res.tag_list);
+             }
+        })
     }
-    
+    function print_tag(){
+        window.print()
+        location.reload()
+        img = document.getElementById('img');
+        img.src=''
+    }
 
 
-
-
-
-function re_print(tag_number,p_name){
-    document.getElementById('tb_box').style.display='';
-    document.getElementById('multiple_result').style.display='none';
-    temp = ` <div class="tb_box" id="tb_box">
-        <div class="tag_box">
-                <div class="tn_box">
-                    <div class="item_name mt-4 mb-2" style="margin-left: 15px;">${p_name}</div>
+    function re_print(tag_number){
+      $("#tag_result").empty();
+      temp = `<div class="tag_box">
+                <div>
+                    <div><img src="https://api.qrserver.com/v1/create-qr-code/?size=151x151&data=${tag_number}" ></div>
                     <div style="display: flex; justify-content: center; gap: 10px;">Tag <h6 id="tag_nummber">${tag_number}</h6></div>
                 </div>
-                <div class="Qr_box">
-                    <div><img src="https://api.qrserver.com/v1/create-qr-code/?size=151x151&data=${tag_number}" ></div>
-                </div>
-        </div>
-    </div> `
-    $("#tb_box").html(temp);
-}
-
-function print_tag(){
-    window.print()
-    location.reload()
-    img = document.getElementById('img');
-    img.src=''
-}
+              </div> `
+      $("#tag_result").html(temp);
+  }
 
 </script>
 {% endblock content %}

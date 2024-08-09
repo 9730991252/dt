@@ -152,58 +152,22 @@ def item(request):
         return redirect('login')
 
 
-@csrf_exempt  
-def batch_number(request):
-    if request.session.has_key('office_mobile'):
-        office_mobile = request.session['office_mobile'] 
-        p = ''
-        b = ''
-        e=Employee.objects.filter(mobile=office_mobile).first()
-        if e:
-            e=Employee.objects.get(mobile=office_mobile)
-            if 'Select_Item' in request.POST:
-                pid=request.POST.get('p_id')
-                p=Item.objects.get(id=pid)
-                b = Batch.objects.filter(item_id=pid)
-        context={
-            'e':e,
-            'p':p,
-            'b':b
-        }
-        return render(request,'office/batch_number.html',context=context)        
-    else:
-        return redirect('login')
-
-
-
 @csrf_exempt
 def generate_qr_code(request):
     if request.session.has_key('office_mobile'):
         office_mobile = request.session['office_mobile']        
-        p='' 
-        b='' 
-        ba='' 
-        pr='' 
-        qr='' 
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
-        if 'Select_Item' in request.POST:
-            pid=request.POST.get('p_id')
-            b = Batch.objects.filter(item_id=pid).order_by('-id')
-            p=Item.objects.get(id=pid)
-        if 'Select_Batch' in request.POST:
-            bid = request.POST.get('bid')
-            ba = Batch.objects.get(id=bid)
-            pr = Item.objects.get(id=ba.item_id)
-            qr = Qr_code.objects.filter(batch_id=bid).order_by('-id')
+            tag_list = Qr_code.objects.filter().order_by('-id')
+            paginator = Paginator(tag_list,1000) 
+            page_number = request.GET.get('page')
+            tag_list = paginator.get_page(page_number)
+            total_pages = tag_list.paginator.num_pages
         context={
             'e':e,
-            'p':p,
-            'b':b,
-            'pr':pr,
-            'ba':ba,
-            'qr':qr
+            'tag_list':tag_list,
+            'last_page':total_pages,
+            'total_page_list':[n+1 for n in range(total_pages)][0:3]
         }
         return render(request,'office/generate_qr_code.html',context=context)        
     else:
@@ -341,28 +305,24 @@ def accepted_view_voucher(request,id):
 
 
     
+def report(request):
+    if request.session.has_key('office_mobile'):
+        office_mobile = request.session['office_mobile']        
+        e=Employee.objects.filter(mobile=office_mobile).first()
+        if e:
+            e=Employee.objects.get(mobile=office_mobile)
+        context={
+            'e':e,
+        }
+        return render(request,'office/report.html',context=context)        
+    else:
+        return redirect('login')
+
+
+
+    
  
 
-def old_stock(request):
-    if request.session.has_key('crenta_admin_mobile'):
-        context={}
-        t=''
-        d=''
-        if 'Days'in request.POST:
-            day = request.POST.get('day')
-            if day == '0':
-                pass
-            else:
-                d = (date.today() - timedelta(days=int(day)))
-                t = In_item.objects.filter(status=1,date__lte=d).order_by('item_id')[0:300]
-            context={
-                't':t,
-                'd':d,
-                'day':day,
-            }
-        return render(request,'office/old_stock.html',context)
-    else:
-        return render(request,'login.html')
 
 
 

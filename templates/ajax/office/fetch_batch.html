@@ -16,7 +16,7 @@
         <div class="text-center"><h6>{{pro.name}}</h6></div>    
         <div class="batch">
             {% for b in ba %}
-            <a style="width: fit-content;" onclick="batch_detail('{{b.id}}')" class="btn btn-success btn-sm">{{b.batch_name}}</a>
+            <a style="width: fit-content;" onclick="batch_detail('{{b.id}}')" class="btn btn-success btn-sm">Batch {{b.batch_name}}</a>
             {% endfor %}
         </div>
     </div>

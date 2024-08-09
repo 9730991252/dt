@@ -6,6 +6,7 @@ from store.models import *
 def index(request):
     #Qr_code.objects.all().delete()
     #Batch.objects.all().delete()
+    #In_item.objects.all().delete()
     #Item.objects.all().delete()
     #Voucher_name.objects.filter(verify_status=1).delete()
     return render(request, 'home/index.html')
