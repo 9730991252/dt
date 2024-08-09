@@ -59,6 +59,7 @@ def employee(request):
                     department=department,
                     ).save()
                 messages.success(request,"Employee Add Succesfully") 
+                return redirect('/office/employee/')
         elif "Active" in request.POST:
             id=request.POST.get('id')
             #print(id)
