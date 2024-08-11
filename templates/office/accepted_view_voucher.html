@@ -41,7 +41,7 @@
                     <td>{{q.tag_number}}</td>
                     <td>{{q.generate_date}}</td>
                     <td>Total Qty {% out_voucher_qty q.item_id q.voucher_id %}</td>
-                    <td> {% if q.verify_by == None %} {% else %}{{q.verify_by}}{% endif %}</td>
+                    <td> {% if q.verify_by == None %} {% else %}{{q.verify_by.name}}{% endif %}</td>
                     <td><form class="" method="POST">{% csrf_token %}{% if q.verify_status == 0 %}<input type="hidden" name="qid" value="{{q.id}}"><button class="btn btn-success btn-sm my-1" type="submit" name="Verify">Accepte</button>{% else %}Accepted{% endif %}</form></td>
                   </tr>
                   {% endfor %}

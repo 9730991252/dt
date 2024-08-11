@@ -4,30 +4,37 @@ from office.models import *
 from store.models import *
 # Create your views here.
 def index(request):
+    #Out_item.objects.all().delete()
+    #Voucher_name.objects.all().delete()
+    #In_item.objects.all().delete()
     #Qr_code.objects.all().delete()
     #Batch.objects.all().delete()
-    #In_item.objects.all().delete()
     #Item.objects.all().delete()
-    #Voucher_name.objects.filter(verify_status=1).delete()
     return render(request, 'home/index.html')
 
 def login(request):
     if request.session.has_key('office_mobile'):
         return redirect('office_dashboard')
-    if request.session.has_key('store_mobile'):
-        return redirect('store_dashboard')
+    if request.session.has_key('in_mobile'):
+        return redirect('in_home')
+    if request.session.has_key('out_mobile'):
+        return redirect('out_home')
     else:
         if request.method == "POST":
             number=request.POST ['number']
             pin=request.POST ['pin']
-            e= Employee.objects.filter(mobile=number,pin=pin,status=1,department='office')
+            e= Employee.objects.filter(mobile=number,pin=pin,status=1)
             if e:
                 request.session['office_mobile'] = request.POST["number"]
                 return redirect('office_dashboard')
-            s= Employee.objects.filter(mobile=number,pin=pin,status=1,department='store')
-            if s:
-                request.session['store_mobile'] = request.POST["number"]
-                return redirect('store_dashboard')
+            ie= In_employee.objects.filter(mobile=number,pin=pin,status=1)
+            if ie:
+                request.session['in_mobile'] = request.POST["number"]
+                return redirect('in_home')
+            oe= Out_employee.objects.filter(mobile=number,pin=pin,status=1)
+            if oe:
+                request.session['out_mobile'] = request.POST["number"]
+                return redirect('out_home')
             else:
                 messages.success(request,"please insert correct information or call more suport 9730991252")            
                 return redirect('login')
@@ -51,6 +58,10 @@ def office_logout(request):
     del request.session['office_mobile']
     return redirect('login')
 
-def store_logout(request):
-    del request.session['store_mobile']
+def in_logout(request):
+    del request.session['in_mobile']
+    return redirect('login')
+
+def out_logout(request):
+    del request.session['out_mobile']
     return redirect('login')

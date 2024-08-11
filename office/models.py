@@ -5,13 +5,26 @@ class Employee(models.Model):
     name = models.CharField(max_length=200)
     mobile = models.IntegerField(max_length=100)
     pin = models.IntegerField(max_length=50)
-    department=models.CharField(max_length=50,default=True)
     status = models.IntegerField(default=1)
     added_date = models.DateTimeField(auto_now_add=True, null=True)
 
+class In_employee(models.Model):
+    name = models.CharField(max_length=200)
+    mobile = models.IntegerField(max_length=100)
+    pin = models.IntegerField(max_length=50)
+    status = models.IntegerField(default=1)
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
+
+class Out_employee(models.Model):
+    name = models.CharField(max_length=200)
+    mobile = models.IntegerField(max_length=100)
+    pin = models.IntegerField(max_length=50)
+    status = models.IntegerField(default=1)
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
 
 class Item(models.Model):
     name = models.CharField(max_length=100)
+    sr_num = models.IntegerField(null=True)
     employee = models.ForeignKey(Employee,on_delete=models.PROTECT,null=True,blank=True)
     added_date = models.DateTimeField(auto_now_add=True,null=True)
     status = models.IntegerField(default=1)

@@ -2,7 +2,7 @@ from django.db import models
 from office.models import *
 # Create your models here.
 class In_item(models.Model):
-    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,default=True,null=True)
+    in_employee = models.ForeignKey(In_employee,on_delete=models.PROTECT,default=True,null=True)
     qr_code = models.ForeignKey(Qr_code,on_delete=models.PROTECT,default=True,null=True)
     item = models.ForeignKey(Item,on_delete=models.PROTECT,default=True)
     tag_number = models.IntegerField(unique=True ,null=True)
@@ -13,7 +13,7 @@ class In_item(models.Model):
 
 
 class Voucher_name(models.Model):
-    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,default=True,null=True)
+    out_employee = models.ForeignKey(Out_employee,on_delete=models.PROTECT,default=True,null=True)
     name = models.CharField(max_length=200)
     verify_by = models.CharField(max_length=100,null=True)
     verify_status = models.IntegerField(null=True,max_length=100)
@@ -21,7 +21,7 @@ class Voucher_name(models.Model):
     date = models.DateTimeField(auto_now_add=True,null=True)
 
 class Out_item(models.Model):
-    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,default=True,null=True)
+    out_employee = models.ForeignKey(Out_employee,on_delete=models.PROTECT,default=True,null=True)
     qr_code = models.ForeignKey(Qr_code,on_delete=models.PROTECT,default=True,null=True)
     item = models.ForeignKey(Item,on_delete=models.PROTECT,default=True)
     voucher = models.ForeignKey(Voucher_name,on_delete=models.PROTECT,default=True)
@@ -30,7 +30,7 @@ class Out_item(models.Model):
     date = models.DateField(auto_now_add=True)
     verify_status = models.IntegerField(null=True,default=0)
     verify_date = models.DateTimeField(null=True)
-    verify_by = models.CharField(max_length=100,null=True)
+    verify_by = models.ForeignKey(Employee,on_delete=models.PROTECT,null=True)
     scan_type = models.CharField(max_length=100, null=True)
 
 

@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import datetime
 from datetime import timedelta, date
 from django.core.paginator import Paginator
+from django.utils import timezone
 # Create your views here.
 def office_dashboard(request):
     if request.session.has_key('office_mobile'):
@@ -15,7 +16,6 @@ def office_dashboard(request):
         all_stock_list = []
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
             i=Item.objects.all()
             for i in i:
                 ti = In_item.objects.filter(item_id=i.id,date__gte=date.today(),date__lte=date.today()).order_by('-id').first()
@@ -41,58 +41,138 @@ def employee(request):
         office_mobile = request.session['office_mobile']
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
-        context={}
+            context={}
 
-        if 'add_employee'in request.POST:
-            name=request.POST.get('name')
-            mobile=request.POST.get('mobile')
-            pin=request.POST.get('pin')
-            department=request.POST.get('department')
-            if Employee.objects.filter(mobile=mobile).exists():
-                messages.warning(request,"Employee Allready Exits")
-            else:
+            if 'add_employee'in request.POST:
+                name=request.POST.get('name')
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                department=request.POST.get('department')
+                if department == 'office':
+                    if Employee.objects.filter(mobile=mobile).exists():
+                        messages.warning(request,"Employee Allready Exits")
+                    else:
+                        Employee(
+                            name=name,
+                            mobile=mobile,
+                            pin=pin,
+                            ).save()
+                        messages.success(request,"Employee Add Succesfully") 
+                        return redirect('/office/employee/')
+                if department == 'in':
+                    if In_employee.objects.filter(mobile=mobile).exists():
+                        messages.warning(request,"Employee Allready Exits")
+                    else:
+                        In_employee(
+                            name=name,
+                            mobile=mobile,
+                            pin=pin,
+                            ).save()
+                        messages.success(request,"Employee Add Succesfully") 
+                        return redirect('/office/employee/')
+                if department == 'out':
+                    if Out_employee.objects.filter(mobile=mobile).exists():
+                        messages.warning(request,"Employee Allready Exits")
+                    else:
+                        Out_employee(
+                            name=name,
+                            mobile=mobile,
+                            pin=pin
+                            ).save()
+                        messages.success(request,"Employee Add Succesfully") 
+                        return redirect('/office/employee/')
+            elif "Active" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Employee.objects.get(id=id)
+                ac.status='0'
+                ac.save()
+            elif "Deactive" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Employee.objects.get(id=id)
+                ac.status='1'
+                ac.save() 
+            elif "In_active" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=In_employee.objects.get(id=id)
+                ac.status='0'
+                ac.save()
+            elif "In_deactive" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=In_employee.objects.get(id=id)
+                ac.status='1'
+                ac.save() 
+            elif "Out_active" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Out_employee.objects.get(id=id)
+                ac.status='0'
+                ac.save()
+            elif "Out_deactive" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Out_employee.objects.get(id=id)
+                ac.status='1'
+                ac.save() 
+
+            elif "Edit" in request.POST:
+                id=request.POST.get('id')
+                name=request.POST.get('name')
+                print(name)
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                #print(id)
                 Employee(
+                    id=id,
                     name=name,
                     mobile=mobile,
                     pin=pin,
-                    department=department,
-                    ).save()
-                messages.success(request,"Employee Add Succesfully") 
+                ).save()
+                messages.success(request,"Employee Edit Succesfully") 
                 return redirect('/office/employee/')
-        elif "Active" in request.POST:
-            id=request.POST.get('id')
-            #print(id)
-            ac=Employee.objects.get(id=id)
-            ac.status='0'
-            ac.save()
-        elif "Deactive" in request.POST:
-            id=request.POST.get('id')
-            #print(id)
-            ac=Employee.objects.get(id=id)
-            ac.status='1'
-            ac.save() 
 
-        elif "Edit" in request.POST:
-            id=request.POST.get('id')
-            name=request.POST.get('name')
-            print(name)
-            mobile=request.POST.get('mobile')
-            pin=request.POST.get('pin')
-            department=request.POST.get('department')
-            #print(id)
-            Employee(
-                id=id,
-                name=name,
-                mobile=mobile,
-                pin=pin,
-                department=department,
-            ).save()
-            messages.success(request,"Employee Edit Succesfully") 
+            elif "In_Edit" in request.POST:
+                id=request.POST.get('id')
+                name=request.POST.get('name')
+                print(name)
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                #print(id)
+                In_employee(
+                    id=id,
+                    name=name,
+                    mobile=mobile,
+                    pin=pin,
+                ).save()
+                messages.success(request,"Employee Edit Succesfully") 
+                return redirect('/office/employee/')
+
+            elif "Out_Edit" in request.POST:
+                id=request.POST.get('id')
+                name=request.POST.get('name')
+                print(name)
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                #print(id)
+                Out_employee(
+                    id=id,
+                    name=name,
+                    mobile=mobile,
+                    pin=pin,
+                ).save()
+                messages.success(request,"Employee Edit Succesfully") 
+                return redirect('/office/employee/')
+            
+
 
         context={
             'e':e,
-            'em':Employee.objects.all()
+            'em':Employee.objects.all(),
+            'In_employee':In_employee.objects.all(),
+            'Out_employee':Out_employee.objects.all(),
         }
         return render(request, 'office/employee.html', context)
     else:
@@ -106,11 +186,11 @@ def item(request):
         office_mobile = request.session['office_mobile']
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
+            pass
         context={}
 
         if 'add_item'in request.POST:
-            name=request.POST.get('name')
+            name=request.POST.get('name').upper()
             Item(
                 name=name,
                 employee_id=e.id
@@ -134,7 +214,7 @@ def item(request):
 
         elif "Edit" in request.POST:
             id=request.POST.get('id')
-            name=request.POST.get('name')
+            name=request.POST.get('name').upper()
             #print(id)
             Item(
                 id=id,
@@ -143,10 +223,10 @@ def item(request):
             ).save()
             messages.success(request,"Item Edit Succesfully") 
             return redirect('item')
-
+    
         context={
             'e':e,
-            'p':Item.objects.all()
+            'p':Item.objects.all().order_by('-sr_num')
         }
         return render(request, 'office/item.html', context)
     else:
@@ -186,7 +266,7 @@ def verify_qr_code(request):
         office_mobile = request.session['office_mobile']        
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
+            pass
         context={
             'e':e,
         }
@@ -200,7 +280,7 @@ def pending_verify_qr_code(request):
         office_mobile = request.session['office_mobile']        
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
+            pass
         context={
             'e':e,
             'v':Voucher_name.objects.filter(verify_status=0)
@@ -217,35 +297,33 @@ def pending_view_voucher(request,id):
         office_mobile = request.session['office_mobile']        
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
             v = Voucher_name.objects.get(id=id)
             q = Out_item.objects.filter(voucher_id=id)
             a = Out_item.objects.filter(voucher_id=id,verify_status=1).count()
             b = Out_item.objects.filter(voucher_id=id).count()
-             
-        if 'Verify' in request.POST:
-            qid = request.POST.get('qid')
-            q = Out_item.objects.get(id=qid)
-            if q.verify_status == 0:
-                q.verify_status = 1
-                q.verify_by = e.name
-                q.verify_date = datetime.datetime.now()
-                q.save()
+            if 'Verify' in request.POST:
+                qid = request.POST.get('qid')
+                q = Out_item.objects.get(id=qid)
+                if q.verify_status == 0:
+                    q.verify_status = 1 
+                    q.verify_by_id = e.id
+                    q.verify_date = datetime.datetime.now()
+                    q.save()
+                    return redirect(f'/office/pending_view_voucher/{id}')
+            if 'Voucher_Verify' in request.POST:
+                v = Voucher_name.objects.get(id=id)
+                v.verify_by = e.name
+                v.verify_status = 1
+                v.verify_date = datetime.datetime.now()
+                v.save()
+                return redirect('/office/pending_verify_qr_code')
+            
+            if 'Update_v' in request.POST:
+                new_name_v = request.POST.get('new_name_v')
+                vn = Voucher_name.objects.get(id=id)
+                vn.name = new_name_v
+                vn.save()
                 return redirect(f'/office/pending_view_voucher/{id}')
-        if 'Voucher_Verify' in request.POST:
-            v = Voucher_name.objects.get(id=id)
-            v.verify_by = e.name
-            v.verify_status = 1
-            v.verify_date = date.today()
-            v.save()
-            return redirect('/office/pending_verify_qr_code')
-        
-        if 'Update_v' in request.POST:
-            new_name_v = request.POST.get('new_name_v')
-            vn = Voucher_name.objects.get(id=id)
-            vn.name = new_name_v
-            vn.save()
-            return redirect(f'/office/pending_view_voucher/{id}')
         context={
             'e':e,
             'q':q,
@@ -266,12 +344,11 @@ def accepted_verify_qr_code(request):
         office_mobile = request.session['office_mobile']        
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
-        v = Voucher_name.objects.filter(verify_status=1)
-        paginator = Paginator(v,10) 
-        page_number = request.GET.get('page')
-        v = paginator.get_page(page_number)
-        total_pages = v.paginator.num_pages
+            v = Voucher_name.objects.filter(verify_status=1)
+            paginator = Paginator(v,10) 
+            page_number = request.GET.get('page')
+            v = paginator.get_page(page_number)
+            total_pages = v.paginator.num_pages
         context={
             'e':e,
             'v': v,
@@ -291,7 +368,6 @@ def accepted_view_voucher(request,id):
         office_mobile = request.session['office_mobile']        
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
             v = Voucher_name.objects.get(id=id)
             q = Out_item.objects.filter(voucher_id=id)
         context={
@@ -311,7 +387,7 @@ def report(request):
         office_mobile = request.session['office_mobile']        
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            e=Employee.objects.get(mobile=office_mobile)
+            pass
         context={
             'e':e,
         }

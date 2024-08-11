@@ -9,7 +9,6 @@ def add_employee_sunil(request):
             name=request.POST.get('name')
             mobile=request.POST.get('mobile')
             pin=request.POST.get('pin')
-            department=request.POST.get('department')
             if Employee.objects.filter(mobile=mobile).exists():
                 messages.success(request,"Employee Allready Exits")
             else:
@@ -17,9 +16,9 @@ def add_employee_sunil(request):
                     name=name,
                     mobile=mobile,
                     pin=pin,
-                    department=department,
                     ).save()
                 messages.success(request,"Employee Add Succesfully") 
+                return redirect('add_employee_sunil')
         context={
             'e':Employee.objects.all()
         }

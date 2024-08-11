@@ -6,6 +6,9 @@
   padding: 0;
 
 }
+.form-control{
+  border: 1px solid black;
+}
 @media only screen and (max-width: 500px) {
 
 }
@@ -30,6 +33,7 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
+        <th scope="col">Sr_num</th>
         <th scope="col">Status</th>
         <th scope="col">Edit</th>
       </tr>
@@ -37,8 +41,9 @@
     <tbody>
         {% for p in p %}
             <tr >
-              <th scope="row">{{forloop.counter}}</th>
+              <td>{{forloop.counter}}</td>
               <td>{{p.name}}</td>
+              <th><input style="width: 50px;" id="sr_num{{p.id}}" type="number" value="{{p.sr_num}}"><i onclick="set_item_sr_num('{{p.id}}')">&#10004;</i></th>
               <td><form class="" method="POST">{% csrf_token %}{% if p.status == 1 %}<button class="btn btn-success" type="submit" name="Active">Active<input type="hidden" name="id" value="{{p.id}}"></button>{% else %}<button class="btn btn-danger" type="submit" name="Deactive">Deactive<input type="hidden" name="id" value="{{p.id}}"></button>{% endif %}</form></td>
               <td><a href="" class="text-bg-info p-2"data-bs-toggle="modal" data-bs-target="#Edit_item_Modal_{{p.id}}" >Edit</a></td>
             </tr>
@@ -89,7 +94,7 @@
             <form method="POST">{% csrf_token %}
                 <div class="mb-3">
                   <label class="form-label">Name</label>
-                  <input type="text" name="name" class="form-control" required>
+                  <input type="text" name="name" class="form-control" style="border: 1px solid black;" required>
                 </div>
                 <button type="submit" name="add_item" class="btn btn-primary">Add</button>
               </form>
@@ -106,6 +111,26 @@
   
 </div>
 
+<script>
+  function set_item_sr_num(item_id){
+    num = document.getElementById('sr_num'+ item_id).value;
+    if (num){
+      console.log(num)
+      $.ajax({
+            url: "{% url 'set_item_sr_num' %}",
+            method: "GET",
+            data:{
+                num:num,
+                item_id:item_id
+            
+            },
+             success: function(res){
+              location.reload()
+             }
+        })
+    }
 
+  }
+</script>
 
 {% endblock content %}

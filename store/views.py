@@ -5,36 +5,51 @@ from datetime import date
 from django.views.decorators.csrf import csrf_exempt
 from ajax.views import *
 # Create your views here.
-def store_dashboard(request):
-    if request.session.has_key('store_mobile'):
-        store_mobile = request.session['store_mobile']
-        e=Employee.objects.filter(mobile=store_mobile).first()
+def in_home(request):
+    if request.session.has_key('in_mobile'):
+        in_mobile = request.session['in_mobile']
+        e=In_employee.objects.filter(mobile=in_mobile).first()
         context={}
         if e:
-            e=Employee.objects.get(mobile=store_mobile)
+            e=In_employee.objects.get(mobile=in_mobile)
         context={
             'e':e
         }
-        return render(request, 'store/store_dashboard.html', context)
+        return render(request, 'store/in_home.html', context)
+    else:
+        return redirect('login')
+    
+def out_home(request):
+    if request.session.has_key('out_mobile'):
+        out_mobile = request.session['out_mobile']
+        e=Out_employee.objects.filter(mobile=out_mobile).first()
+        context={}
+        if e:
+            pass
+        context={
+            'e':e
+        }
+        return render(request, 'store/out_home.html', context)
     else:
         return redirect('login')
 
 @csrf_exempt
 def search_in_item(request):
-    if request.session.has_key('store_mobile'):
-        store_mobile = request.session['store_mobile']
-        e=Employee.objects.filter(mobile=store_mobile).first()
+    if request.session.has_key('in_mobile'):
+        in_mobile = request.session['in_mobile']
+        e=In_employee.objects.filter(mobile=in_mobile).first()
         in_stock_list = []
         if e:
-            item = Item.objects.all()
+            item = Item.objects.all().order_by('-sr_num')
             if item:
                 for i in item:
-                    i_name = In_item.objects.filter(employee_id=e.id,item_id=i.id,date__gte=date.today(),date__lte=date.today()).first()
+                    i_name = In_item.objects.filter(in_employee_id=e.id,item_id=i.id,date__gte=date.today(),date__lte=date.today()).first()
                     if i_name:
                         in_stock_list.append(i_name)
         context={
             'e':e,
-            'in_stock_list':in_stock_list
+            'in_stock_list':in_stock_list,
+            'item':item
         }
         return render(request, 'store/search_in_item.html', context)
     else:
@@ -42,9 +57,9 @@ def search_in_item(request):
 
 
 def item_in(request,item_id):
-    if request.session.has_key('store_mobile'):
-        store_mobile = request.session['store_mobile']
-        e=Employee.objects.filter(mobile=store_mobile).first()
+    if request.session.has_key('in_mobile'):
+        in_mobile = request.session['in_mobile']
+        e=In_employee.objects.filter(mobile=in_mobile).first()
         context={}
         if e:
             b = Batch.objects.filter(item_id=item_id).count()
@@ -64,20 +79,20 @@ def item_in(request,item_id):
         return redirect('login')
     
 def add_voucher(request):
-    if request.session.has_key('store_mobile'):
-        store_mobile = request.session['store_mobile']
-        e=Employee.objects.filter(mobile=store_mobile).first()
+    if request.session.has_key('out_mobile'):
+        out_mobile = request.session['out_mobile']
+        e=Out_employee.objects.filter(mobile=out_mobile).first()
         context={}
         if e:
-            e=Employee.objects.get(mobile=store_mobile)
+            e=Out_employee.objects.get(mobile=out_mobile)
             if 'Add_voucher'in request.POST:
                 voucher_name = request.POST.get('voucher_name')
                 Voucher_name(
-                    employee_id = e.id,
+                    out_employee_id = e.id,
                     name = voucher_name,
                     verify_status = 0
                 ).save()
-                v = Voucher_name.objects.filter(employee_id=e.id).last()
+                v = Voucher_name.objects.filter(out_employee_id=e.id).last()
                 return redirect(f'/store/item_out/{v.id}')
         context={
             'e':e
@@ -87,13 +102,13 @@ def add_voucher(request):
         return redirect('login')
     
 def item_out(request, id):
-    if request.session.has_key('store_mobile'):
-        store_mobile = request.session['store_mobile']
-        e=Employee.objects.filter(mobile=store_mobile).first()
+    if request.session.has_key('out_mobile'):
+        out_mobile = request.session['out_mobile']
+        e=Out_employee.objects.filter(mobile=out_mobile).first()
         context={}
         vi_item = []
         if e:
-            e=Employee.objects.get(mobile=store_mobile)
+            e=Out_employee.objects.get(mobile=out_mobile)
             it = Item.objects.all()
             for i in it:
                 vi = Out_item.objects.filter(voucher_id=id,item_id=i.id).first()

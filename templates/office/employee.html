@@ -6,6 +6,9 @@
   padding: 0;
 
 }
+.form-control{
+  border: 1px solid black;
+}
 @media only screen and (max-width: 500px) {
 
 }
@@ -25,6 +28,7 @@
         <div class="container mt-2"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_employee">Add Employee</button></div><br>
         {% include 'include/alert.html' %}
 <div class="container mt-3">
+  <div class="text-center"><h6>Office Employee</h6></div>
   <table class="table">
     <thead>
       <tr>
@@ -32,7 +36,6 @@
         <th scope="col">Name</th>
         <th scope="col">Mobile</th>
         <th scope="col">Pin</th>
-        <th scope="col">Department</th>
         <th scope="col">Status</th>
         <th scope="col">Edit</th>
       </tr>
@@ -44,7 +47,6 @@
               <td>{{e.name}}</td>
               <td>{{e.mobile}}</td>
               <td>{{e.pin}}</td>
-              <td>{{e.department}}</td>
               <td><form class="" method="POST">{% csrf_token %}{% if e.status == 1 %}<button class="btn btn-success" type="submit" name="Active">Active<input type="hidden" name="id" value="{{e.id}}"></button>{% else %}<button class="btn btn-danger" type="submit" name="Deactive">Deactive<input type="hidden" name="id" value="{{e.id}}"></button>{% endif %}</form></td>
               <td><a href="" class="text-bg-info p-2"data-bs-toggle="modal" data-bs-target="#Edit_empolyee_Modal_{{e.id}}" >Edit</a></td>
             </tr>
@@ -76,22 +78,144 @@
                         <label for="pin" class="form-label">Secret Pin</label>
                          <input type="number" class="form-control" id="pin" name="pin" value="{{e.pin}}">
                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary" name="Edit">Submit</button>
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+                </form>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+<br>
+<div class="container mt-3">
+  <div class="text-center"><h6>In Employee</h6></div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Mobile</th>
+        <th scope="col">Pin</th>
+        <th scope="col">Status</th>
+        <th scope="col">Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for e in In_employee %}
+            <tr >
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{e.name}}</td>
+              <td>{{e.mobile}}</td>
+              <td>{{e.pin}}</td>
+              <td><form class="" method="POST">{% csrf_token %}{% if e.status == 1 %}<button class="btn btn-success" type="submit" name="In_active">Active<input type="hidden" name="id" value="{{e.id}}"></button>{% else %}<button class="btn btn-danger" type="submit" name="In_deactive">Deactive<input type="hidden" name="id" value="{{e.id}}"></button>{% endif %}</form></td>
+              <td><a href="" class="text-bg-info p-2"data-bs-toggle="modal" data-bs-target="#Edit_In_empolyee_Modal_{{e.id}}" >Edit</a></td>
+            </tr>
+            <!-- Edit Empolyee Modal -->
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="modal fade" id="Edit_In_empolyee_Modal_{{e.id}}" tabindex="-1" aria-labelledby="Edit_In_empolyee_Modal_{{e.id}}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="Edit_empolyee_Modal_{{e.id}}">Edit Employee</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="hidden" name="id" value="{{e.id}}">
+                      
+                      <div class="mb-3">
+                        <label for="employee_name" class="form-label">employee name</label>
+                        <input type="text" class="form-control" id="employee_name" name="name" value="{{e.name}}">
+                      </div>
+                
+                
+                       <div class="mb-3">
+                        <label for="employee_mobile" class="form-label">Mobile</label>
+                         <input type="number" class="form-control" id="employee_mobile" name="mobile" value="{{e.mobile}}">
+                       </div>
                      
                        <div class="mb-3">
-      
-                        <select id="department" class="form-control" name="department" required>
-                        <option value="{{e.department}}" selected>{{e.department}}</option>
-                        <option value="office">Office</option>
-                        <option value="store">Store</option>
-                      </select>
-                    
+                        <label for="pin" class="form-label">Secret Pin</label>
+                         <input type="number" class="form-control" id="pin" name="pin" value="{{e.pin}}">
                        </div>
+                    
                 
                 
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary" name="Edit">Submit</button>
+                      <button type="submit" class="btn btn-primary" name="In_Edit">Submit</button>
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+                </form>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+<br>
+
+<div class="container mt-3">
+  <div class="text-center"><h6>Out Employee</h6></div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Mobile</th>
+        <th scope="col">Pin</th>
+        <th scope="col">Status</th>
+        <th scope="col">Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for e in Out_employee %}
+            <tr >
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{e.name}}</td>
+              <td>{{e.mobile}}</td>
+              <td>{{e.pin}}</td>
+              <td><form class="" method="POST">{% csrf_token %}{% if e.status == 1 %}<button class="btn btn-success" type="submit" name="Out_active">Active<input type="hidden" name="id" value="{{e.id}}"></button>{% else %}<button class="btn btn-danger" type="submit" name="Out_deactive">Deactive<input type="hidden" name="id" value="{{e.id}}"></button>{% endif %}</form></td>
+              <td><a href="" class="text-bg-info p-2"data-bs-toggle="modal" data-bs-target="#Edit_Out_empolyee_Modal_{{e.id}}" >Edit</a></td>
+            </tr>
+            <!-- Edit Empolyee Modal -->
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="modal fade" id="Edit_Out_empolyee_Modal_{{e.id}}" tabindex="-1" aria-labelledby="Edit_Out_empolyee_Modal_{{e.id}}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="Edit_empolyee_Modal_{{e.id}}">Edit Employee</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="hidden" name="id" value="{{e.id}}">
+                      
+                      <div class="mb-3">
+                        <label for="employee_name" class="form-label">employee name</label>
+                        <input type="text" class="form-control" id="employee_name" name="name" value="{{e.name}}">
+                      </div>
+                
+                
+                       <div class="mb-3">
+                        <label for="employee_mobile" class="form-label">Mobile</label>
+                         <input type="number" class="form-control" id="employee_mobile" name="mobile" value="{{e.mobile}}">
+                       </div>
+                     
+                       <div class="mb-3">
+                        <label for="pin" class="form-label">Secret Pin</label>
+                         <input type="number" class="form-control" id="pin" name="pin" value="{{e.pin}}">
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary" name="Out_Edit">Submit</button>
                     </div>
                     </div>
                   </div>
@@ -127,7 +251,8 @@
                     <select id="department" class="form-control" name="department" required>
                       <option value="">Select Department</option>
                     <option value="office">Office</option>
-                    <option value="store">Store</option>
+                    <option value="in">In</option>
+                    <option value="out">Out</option>
                   </select>
                    </div>
                 <button type="submit" name="add_employee" class="btn btn-primary">Add</button>

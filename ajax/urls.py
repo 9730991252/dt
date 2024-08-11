@@ -12,4 +12,5 @@ urlpatterns = [
     path('search_item', views.search_item,name='search_item'),
     path('generate_tag', views.generate_tag,name='generate_tag'),
     path('search_in_item_ajax', views.search_in_item_ajax,name='search_in_item_ajax'),
+    path('set_item_sr_num', views.set_item_sr_num,name='set_item_sr_num'),
         ]
