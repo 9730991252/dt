@@ -160,6 +160,7 @@
                 document.getElementById('tag_qty').value='';
                 $("#tag_result").html(res.t);
                 $("#tag_list").html(res.tag_list);
+                $("html, body").animate({ scrollTop: 0 }, "fast");
              }
         })
     }

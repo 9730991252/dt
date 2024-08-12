@@ -8,6 +8,11 @@ sudo systemctl restart dt_barcode.com.gunicorn
 exit
 
 _______________________________________
+
+
+git clone https://github.com/9730991252/dt.git
+
+_______________________________________
 ********** Create Virtual env *****
 
 virtualenv venv
@@ -86,6 +91,7 @@ WantedBy=multi-user.target
 
 ----------------------------------------------------------------
 sudo systemctl start dt_barcode.com.gunicorn.socket
+
 sudo systemctl start dt_barcode.com.gunicorn.service
 
 
@@ -128,7 +134,7 @@ server{
     listen 80;
     listen [::]:80;
 
-    server_name dt.narayaniorder.com www.dt.narayaniorder.com;
+    server_name dtf.narayaniorder.com www.dtf.narayaniorder.com;
     client_max_body_size 500M;
 
     location = /favicon.ico { access_log off; log_not_found off; }

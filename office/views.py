@@ -298,7 +298,7 @@ def pending_view_voucher(request,id):
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
             v = Voucher_name.objects.get(id=id)
-            q = Out_item.objects.filter(voucher_id=id)
+            q = Out_item.objects.filter(voucher_id=id).order_by('item_id')
             a = Out_item.objects.filter(voucher_id=id,verify_status=1).count()
             b = Out_item.objects.filter(voucher_id=id).count()
             if 'Verify' in request.POST:
@@ -369,7 +369,7 @@ def accepted_view_voucher(request,id):
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
             v = Voucher_name.objects.get(id=id)
-            q = Out_item.objects.filter(voucher_id=id)
+            q = Out_item.objects.filter(voucher_id=id).order_by('item_id')
         context={
             'e':e,
             'v':v,
