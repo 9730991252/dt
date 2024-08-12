@@ -176,8 +176,8 @@
       $("#tag_result").empty();
       temp = `    <div class="tag_box">
         <div>
+          <div style="display: flex; justify-content: center; gap: 10px;">Tag <h6 id="tag_nummber">${tag_number}</h6></div>
             <div><img src="https://api.qrserver.com/v1/create-qr-code/?size=151x151&data=${tag_number}" ></div>
-            <div style="display: flex; justify-content: center; gap: 10px;">Tag <h6 id="tag_nummber">${tag_number}</h6></div>
         </div>
     </div> `
       $("#tag_result").html(temp);
