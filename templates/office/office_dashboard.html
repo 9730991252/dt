@@ -29,8 +29,13 @@
   input{
     width: 90%;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: auto
   }
+}
+.machine_list{
+    text-align: center;
+    background-color: rgb(224, 233, 255);
+    border-radius: 10px;
 }
 @media only screen and (max-width: 500px) {
     .Todays_Production{
@@ -70,6 +75,13 @@
         <!--* Todays_Production *-->
         <div class="Todays_Production">Todays Production</div>
         {% if t|length == 0 %}No Production Added Today{% endif %}
+        <div class="container">
+            {% for m in machine_list %}
+                <div class="machine_list">
+                    {{m.name}} &nbsp;&nbsp;&nbsp; {% today_production_machine m.id %}
+                </div>
+            {% endfor %}
+        </div>
         {% for t in t %}
         <div onclick="fetch_batch('{{t.item_id}}')" >
             <div class="text-center" style="margin: 10px;border-radius: 10px; background-color: rgb(255, 202, 231);"><strong>{{t.item.name}}</strong> &nbsp;&nbsp;&nbsp; {% today_production t.item_id %}</div>

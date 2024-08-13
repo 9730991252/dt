@@ -24,9 +24,145 @@
 
         
     <div class="col-10">
-
-        <div class="container mt-2"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_employee">Add Employee</button></div><br>
+      <div style="display: flex;gap:10px;">
+        <div class="container mt-2"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_employee">Add Employee</button></div>
+        <div class="container mt-2"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_machine">Add Machine</button></div>
+        <div class="container mt-2"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_operator">Add Operator</button></div>
+      </div>
         {% include 'include/alert.html' %}
+<div class="container mt-3">
+  <div class="text-center"><h6>machine</h6></div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Machine Name</th>
+        <th scope="col">Status</th>
+        <th scope="col">Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for m in machine %}
+            <tr >
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{m.name}}</td>
+              <td><form class="" method="POST">{% csrf_token %}{% if m.status == 1 %}<button class="btn btn-success" type="submit" name="machine_Active">Active<input type="hidden" name="id" value="{{m.id}}"></button>{% else %}<button class="btn btn-danger" type="submit" name="machine_Deactive">Deactive<input type="hidden" name="id" value="{{m.id}}"></button>{% endif %}</form></td>
+              <td><a href="" class="text-bg-info p-2"data-bs-toggle="modal" data-bs-target="#Edit_machine_Modal_{{m.id}}" >Edit</a></td>
+            </tr>
+            <!-- Edit Empolyee Modal -->
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="modal fade" id="Edit_machine_Modal_{{m.id}}" tabindex="-1" aria-labelledby="Edit_machine_Modal_{{m.id}}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5">Edit Machine</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      
+                      <div class="mb-3">
+                        <label for="name" class="form-label">name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{m.name}}">
+                      </div>
+                
+                
+                       <div class="mb-3">
+                         <input type="hidden" class="form-control" name="m_id" value="{{m.id}}">
+                       </div>
+                     
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary" name="Edit_machine">Submit</button>
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+                </form>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="container mt-3">
+  <div class="text-center"><h6>Operator</h6></div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Mobile</th>
+        <th scope="col">Pin</th>
+        <th scope="col">Machine</th>
+        <th scope="col">Helper Limit</th>
+        <th scope="col">Status</th>
+        <th scope="col">Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for o in operator %}
+            <tr >
+              <th scope="row">{{forloop.counter}}</th>
+              <td>{{o.name}}</td>
+              <td>{{o.mobile}}</td>
+              <td>{{o.pin}}</td>
+              <td>{{o.machine.name}}</td>
+              <td>{{o.helper_limit}}</td>
+              <td><form class="" method="POST">{% csrf_token %}{% if o.status == 1 %}<button class="btn btn-success" type="submit" name="operator_Active">Active<input type="hidden" name="id" value="{{o.id}}"></button>{% else %}<button class="btn btn-danger" type="submit" name="operator_Deactive">Deactive<input type="hidden" name="id" value="{{o.id}}"></button>{% endif %}</form></td>
+              <td><a href="" class="text-bg-info p-2"data-bs-toggle="modal" data-bs-target="#Edit_operator_Modal_{{o.id}}" >Edit</a></td>
+            </tr>
+            <!-- Edit Empolyee Modal -->
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="modal fade" id="Edit_operator_Modal_{{o.id}}" tabindex="-1" aria-labelledby="Edit_machine_Modal_{{m.id}}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5">Edit operator</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <input type="hidden" class="form-control" name="o_id" value="{{o.id}}">
+                      </div>
+                      <div class="mb-3">
+                        <label for="name" class="form-label">name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{o.name}}" operator_Edit>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Mobile</label>
+                        <input type="number" name="mobile" class="form-control" value="{{o.mobile}}" required>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Pin</label>
+                        <input type="number" name="pin" class="form-control" value="{{o.pin}}" required>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Machine</label>
+                        <select class="form-select" name="machine_id" aria-label="Default select example">
+                          <option selected value="{{o.machine_id}}">{{o.machine.name}}</option>
+                          {% for m in machine %}
+                            <option value="{{m.id}}">{{m.name}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Helper Limit</label>
+                        <input type="number" name="helper_limit" value="{{o.helper_limit}}" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary" name="operator_Edit">Submit</button>
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+                </form>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
 <div class="container mt-3">
   <div class="text-center"><h6>Office Employee</h6></div>
   <table class="table">
@@ -160,7 +296,6 @@
   </table>
 </div>
 <br>
-
 <div class="container mt-3">
   <div class="text-center"><h6>Out Employee</h6></div>
   <table class="table">
@@ -225,7 +360,6 @@
     </tbody>
   </table>
 </div>
-
   <div class="modal fade" id="add_employee" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -264,10 +398,72 @@
       </div>
     </div>
   </div>
-
+  <div class="modal fade" id="add_machine" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Machine</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="POST">{% csrf_token %}
+                <div class="mb-3">
+                  <label class="form-label">Name</label>
+                  <input type="text" name="name" class="form-control" required>
+                </div>
+                <button type="submit" name="Add_machine" class="btn btn-primary">Add</button>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
-
-  
+  </div>
+  <div class="modal fade" id="add_operator" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Operator</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="POST">{% csrf_token %}
+                <div class="mb-3">
+                  <label class="form-label">Name</label>
+                  <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Mobile</label>
+                  <input type="number" name="mobile" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Pin</label>
+                  <input type="number" name="pin" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Machine</label>
+                  <select class="form-select" name="machine_id" aria-label="Default select example">
+                    <option selected>select Machine</option>
+                    {% for m in machine %}
+                    <option value="{{m.id}}">{{m.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Helper Limit</label>
+                  <input type="number" name="helper_limit" class="form-control" required>
+                </div>
+                <button type="submit" name="Add_operator" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
 </div>
 
 

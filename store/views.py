@@ -8,7 +8,7 @@ from ajax.views import *
 def in_home(request):
     if request.session.has_key('in_mobile'):
         in_mobile = request.session['in_mobile']
-        e=In_employee.objects.filter(mobile=in_mobile).first()
+        e=In_employee.objects.filter(mobile=in_mobile,status=1).first()
         context={}
         if e:
             e=In_employee.objects.get(mobile=in_mobile)
@@ -104,7 +104,7 @@ def add_voucher(request):
 def item_out(request, id):
     if request.session.has_key('out_mobile'):
         out_mobile = request.session['out_mobile']
-        e=Out_employee.objects.filter(mobile=out_mobile).first()
+        e=Out_employee.objects.filter(mobile=out_mobile,status=1).first()
         context={}
         vi_item = []
         if e:
@@ -124,6 +124,36 @@ def item_out(request, id):
     else:
         return redirect('login')
 
+def operator_home(request):
+    if request.session.has_key('operator_mobile'):
+        operator_mobile = request.session['operator_mobile']
+        e=Operator.objects.filter(mobile=operator_mobile,status=1).first()
+        context={}
+        vi_item = []
+        if e:
+            if 'select_helper'in request.POST:
+                in_employee_id = request.POST.get('in_employee_id')
+                in_employee = In_employee.objects.get(id=in_employee_id)
+                in_employee.working_status = 1
+                in_employee.operator_id = e.id
+                in_employee.save()
+                return redirect('/store/operator_home/')
+            if 'De_select_helper'in request.POST:
+                in_employee_id = request.POST.get('in_employee_id')
+                in_employee = In_employee.objects.get(id=in_employee_id)
+                in_employee.working_status = 0
+                in_employee.operator_id = None
+                in_employee.save()
+                return redirect('/store/operator_home/')
+        context={
+            'e':e,
+            'in_employee':In_employee.objects.filter(status=1,working_status=0),
+            'in_employee_selected':In_employee.objects.filter(status=1,working_status=1,operator_id=e.id),
+            'in_employee_selected_count':In_employee.objects.filter(status=1,working_status=1,operator_id=e.id).count(),
+        }
+        return render(request, 'store/operator/operator_home.html', context)
+    else:
+        return redirect('login')
 
 
 

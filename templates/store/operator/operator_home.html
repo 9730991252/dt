@@ -1,0 +1,42 @@
+{% extends 'home/base.html' %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+<style>
+    .all_helper{
+        text-align: center;
+        margin-left: 10px ;
+        margin-right: 10px ;
+        color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        height: 30px;
+    }
+</style>
+<div class="container">
+    <div class=""><h>Welcome - {{e.name}}</h></div>
+    {% include 'include/alert.html' %}
+    
+</div>
+
+{% include 'include/operator_menu.html' %}
+
+<div class="text-center"><h6>Machine Name- <b>{{e.machine.name}}</b></h6></div>
+
+{% for i in in_employee_selected %}
+<div class="all_helper alert alert-success">
+    <div>{{i.name}}</div>
+    <div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="in_employee_id"><button type="submit" class="btn btn-transparent btn-sm" name="De_select_helper" >&#10060;</button></form></div>
+</div>
+{% endfor %}
+<hr>
+{% for i in in_employee %}
+    <div class="all_helper alert alert-warning">
+        <div>{{i.name}}</div>
+        {% if in_employee_selected_count < e.helper_limit %}<div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="in_employee_id"><button type="submit" class="btn btn-transparent btn-sm" name="select_helper" >&#10004;</button></form></div>{% endif %}
+    </div>
+{% endfor %}
+
+{% endblock content %}

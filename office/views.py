@@ -30,6 +30,7 @@ def office_dashboard(request):
             'e':e,
             't':ti_item,
             'all_stock_list':all_stock_list,
+            'machine_list':Machine.objects.filter(status=1)
         }
         return render(request, 'office/office_dashboard.html', context)
     else:
@@ -81,6 +82,35 @@ def employee(request):
                             ).save()
                         messages.success(request,"Employee Add Succesfully") 
                         return redirect('/office/employee/')
+            elif "Add_machine" in request.POST:
+                name=request.POST.get('name')
+                if name:
+                    Machine(
+                      name=name 
+                    ).save()
+                    messages.success(request,"Machine Add Succesfully") 
+                    return redirect('/office/employee/')
+            elif "Edit_machine" in request.POST:
+                name=request.POST.get('name')
+                m_id=request.POST.get('m_id')
+                if name:
+                    c=Machine.objects.get(id=m_id)
+                    c.name=name
+                    c.save()
+                    messages.success(request,"Machine Edit Succesfully") 
+                    return redirect('/office/employee/')
+            elif "machine_Active" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Machine.objects.get(id=id)
+                ac.status='0'
+                ac.save()
+            elif "machine_Deactive" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Machine.objects.get(id=id)
+                ac.status='1'
+                ac.save() 
             elif "Active" in request.POST:
                 id=request.POST.get('id')
                 #print(id)
@@ -166,6 +196,54 @@ def employee(request):
                 messages.success(request,"Employee Edit Succesfully") 
                 return redirect('/office/employee/')
             
+            elif "Add_operator" in request.POST:
+                name=request.POST.get('name')
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                machine_id=request.POST.get('machine_id')
+                helper_limit=request.POST.get('helper_limit')
+                if Operator.objects.filter(mobile=mobile).exists():
+                    messages.warning(request,"Operator Allready Exits")
+                else:
+                    Operator(
+                      name=name,
+                      mobile=mobile,
+                      pin=pin,
+                      machine_id=machine_id,
+                      helper_limit=helper_limit,
+                    ).save()
+                    messages.success(request,"Operator Add Succesfully") 
+                    return redirect('/office/employee/')
+            elif "operator_Active" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Operator.objects.get(id=id)
+                ac.status='0'
+                ac.save()
+            elif "operator_Deactive" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Operator.objects.get(id=id)
+                ac.status='1'
+                ac.save() 
+            elif "operator_Edit" in request.POST:
+                o_id=request.POST.get('o_id')
+                name=request.POST.get('name')
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                machine_id=request.POST.get('machine_id')
+                helper_limit=request.POST.get('helper_limit')
+                #print(id)
+                Operator(
+                    id=o_id,
+                    name=name,
+                    mobile=mobile,
+                    pin=pin,
+                    machine_id=machine_id,
+                    helper_limit=helper_limit,
+                ).save()
+                messages.success(request,"Operator Edit Succesfully") 
+                return redirect('/office/employee/')
 
 
         context={
@@ -173,6 +251,9 @@ def employee(request):
             'em':Employee.objects.all(),
             'In_employee':In_employee.objects.all(),
             'Out_employee':Out_employee.objects.all(),
+            'machine':Machine.objects.all(),
+            'operator':Operator.objects.all(),
+
         }
         return render(request, 'office/employee.html', context)
     else:
@@ -312,7 +393,7 @@ def pending_view_voucher(request,id):
                     return redirect(f'/office/pending_view_voucher/{id}')
             if 'Voucher_Verify' in request.POST:
                 v = Voucher_name.objects.get(id=id)
-                v.verify_by = e.name
+                v.verify_by_id = e.id
                 v.verify_status = 1
                 v.verify_date = datetime.datetime.now()
                 v.save()

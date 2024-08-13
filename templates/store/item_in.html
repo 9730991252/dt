@@ -94,6 +94,8 @@
     <div class=""><h>Welcome - {{e.name}}</h></div>
     <input type="hidden" id="e_id" value="{{e.id}}">
     <input type="hidden" id="e_name" value="{{e.name}}">
+    <input type="hidden" id="operator_id" value="{{e.operator_id}}">
+    <input type="hidden" id="machine_id" value="{{e.operator.machine_id}}">
     <input type="hidden" id="b_id" value="{{b_id.id}}">
     <input type="hidden" id="item_id" value="{{i.id}}">
     {% include 'include/alert.html' %}
@@ -139,7 +141,7 @@
 </div>
 
 
-
+ 
 
 <!--* end content *-->
 <div class="sticky"><div class="container"><input type="number" id="tag_num" placeholder="Enter Tag Number" class="form-control"> </div><div class="container"><button class="btn btn-primary" onclick="serch_in_tag()">Search</button></div></div>
@@ -156,6 +158,8 @@
 var count_ruselt = 0;
 var last_ruselt = 0;
 let e_name = document.getElementById('e_name').value;
+let operator_id = document.getElementById('operator_id').value;
+let machine_id = document.getElementById('machine_id').value;
 let b_id = document.getElementById('b_id').value;
 let item_id = document.getElementById('item_id').value;
 function onScanSuccess(c){
@@ -170,7 +174,9 @@ function onScanSuccess(c){
                 tag_num:c,
                 e_id:document.getElementById('e_id').value,
                 b_id:b_id,
-                item_id:item_id
+                item_id:item_id,
+                operator_id:operator_id,
+                machine_id:machine_id,
         },
         success: function(res){
             document.getElementById('last_ruselt').innerHTML=`${res.i_name}&nbsp&nbspTag&nbsp${c}`
@@ -251,7 +257,9 @@ var html5QrcodeScanner = new Html5QrcodeScanner(
                 tag_num:c,
                 e_id:document.getElementById('e_id').value,
                 b_id:b_id,
-                item_id:item_id
+                item_id:item_id,
+                operator_id:operator_id,
+                machine_id:machine_id,
         },
         success: function(res){
             document.getElementById('last_ruselt').innerHTML=`${res.i_name}&nbsp&nbspTag&nbsp${c}`

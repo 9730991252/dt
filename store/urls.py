@@ -7,4 +7,5 @@ urlpatterns = [
     path('item_in/<int:item_id>', views.item_in, name='item_in'),
     path('add_voucher/', views.add_voucher, name='add_voucher'),
     path('item_out/<int:id>', views.item_out, name='item_out'),
+    path('operator_home/', views.operator_home, name='operator_home'),
 ]

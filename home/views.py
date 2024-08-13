@@ -10,6 +10,7 @@ def index(request):
     #Qr_code.objects.all().delete()
     #Batch.objects.all().delete()
     #Item.objects.all().delete()
+    #Operator.objects.all().delete()
     return render(request, 'home/index.html')
 
 def login(request):
@@ -19,6 +20,8 @@ def login(request):
         return redirect('in_home')
     if request.session.has_key('out_mobile'):
         return redirect('out_home')
+    if request.session.has_key('operator_mobile'):
+        return redirect('operator_home')
     else:
         if request.method == "POST":
             number=request.POST ['number']
@@ -35,6 +38,10 @@ def login(request):
             if oe:
                 request.session['out_mobile'] = request.POST["number"]
                 return redirect('out_home')
+            op = Operator.objects.filter(mobile=number,pin=pin,status=1)
+            if op:
+                request.session['operator_mobile'] = request.POST["number"]
+                return redirect('operator_home')
             else:
                 messages.success(request,"please insert correct information or call more suport 9730991252")            
                 return redirect('login')
@@ -64,4 +71,8 @@ def in_logout(request):
 
 def out_logout(request):
     del request.session['out_mobile']
+    return redirect('login')
+
+def operator_logout(request):
+    del request.session['operator_mobile']
     return redirect('login')

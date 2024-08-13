@@ -33,6 +33,12 @@ def today_production_employee(id, e_id):
     qty = In_item.objects.filter(item_id=id,in_employee_id=e_id,date__gte=date.today(),date__lte=date.today()).count()
     return qty
 
+@register.simple_tag
+def today_production_machine(m_id):
+    qty = In_item.objects.filter(machine_id=m_id,date__gte=date.today(),date__lte=date.today()).count()
+    return qty
+
+
 @register.inclusion_tag('inclusion_tag/store/today_production_tag.html')
 def today_production_in_tag(id, e_id):
     tag = In_item.objects.filter(item_id=id,date__gte=date.today(),date__lte=date.today(),in_employee_id=e_id).order_by('tag_number')

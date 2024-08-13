@@ -2,6 +2,12 @@
 {% block head %}
 {% endblock head %}
 {% block content %}
+<style>
+    .alert{
+        font-weight: 700;
+        font-size: 18px;
+    }
+</style>
 <div class="container">
     <div class=""><h>Welcome - {{e.name}}</h></div>
     <input type="hidden" id="e_id" value="{{e.id}}">
@@ -11,9 +17,22 @@
     {% include 'include/alert.html' %}
     
 </div>
-
+{% if e.working_status == 0 %}
+<div class="container"><div class="alert alert-success text-center">You Are Free Now</div></div>
+{% else %}
 {% include 'include/in_menu.html' %}
+<br>
+<div class="container text-center"><h6>Your Operator - {{e.operator.name}}</h6></div>
+<div class="container text-center"><h6>Your machine - {{e.operator.machine.name}}</h6></div>
+<div class="container text-center"><h6>Todays Date - <strong id="demo"></strong></h6></div>
 
+{% endif %}
+<script>
+  var now = new Date();
+  var datetime = now.toLocaleString();
 
+  // Insert date and time into HTML
+  document.getElementById("demo").innerHTML = datetime;
+</script>
 
 {% endblock content %}

@@ -44,6 +44,8 @@ def in_item(request):
     if request.method == 'GET':
         tag_number = request.GET['tag_num']
         employee_id = request.GET['e_id']
+        operator_id = request.GET['operator_id']
+        machine_id = request.GET['machine_id']
         batch_id = request.GET['b_id']
         item_id = request.GET['item_id']
         qr = Qr_code.objects.filter(tag_number=tag_number).first()
@@ -52,7 +54,7 @@ def in_item(request):
             if qr_count < 1000:
                 if qr.in_status == 0 and qr.out_status == 0:
                     #* success
-                    in_item_save(tag_number,employee_id,item_id,batch_id,qr_count,scan_type=1)
+                    in_item_save(tag_number,employee_id,item_id,batch_id,qr_count,operator_id,machine_id,scan_type=1)
                     status = 1
                 if qr.in_status == 1:
                     #*Qr Code Already Scaned
@@ -80,13 +82,15 @@ def in_item_manual(request):
         employee_id = request.GET['e_id']
         batch_id = request.GET['b_id']
         item_id = request.GET['item_id']
+        operator_id = request.GET['operator_id']
+        machine_id = request.GET['machine_id']
         qr = Qr_code.objects.filter(tag_number=tag_number).first()
         if qr:
             qr_count = Qr_code.objects.filter(batch_id=batch_id).count()
             if qr_count < 1000:
                 if qr.in_status == 0 and qr.out_status == 0:
                     #* success
-                    in_item_save(tag_number,employee_id,item_id,batch_id,qr_count,scan_type=0)
+                    in_item_save(tag_number,employee_id,item_id,batch_id,qr_count,operator_id,machine_id,scan_type=0)
                     status = 1
                 if qr.in_status == 1:
                     #*Qr Code Already Scaned
@@ -108,7 +112,7 @@ def in_item_manual(request):
         t = render_to_string('ajax/store/today_production.html', context)
     return JsonResponse({'t':t, 'status':status, 'i_name':i_name}) 
 
-def in_item_save(tag_number,employee_id,item_id,batch_id,sr_num,scan_type):
+def in_item_save(tag_number,employee_id,item_id,batch_id,sr_num,operator_id,machine_id,scan_type):
     #print('tag_num = ',tag_number,  'eid = ',employee_id, 'item_id =', item_id,  'scan_type = ', scan_type)
     qr = Qr_code.objects.filter(tag_number=tag_number).first()
     sr_num += 1
@@ -118,6 +122,8 @@ def in_item_save(tag_number,employee_id,item_id,batch_id,sr_num,scan_type):
         item_id=item_id,
         tag_number=tag_number,
         status=1,
+        operator_id=operator_id,
+        machine_id=machine_id,
         scan_type=scan_type,
     ).save()
     qr.in_status =1
@@ -304,7 +310,7 @@ def batch_save(item_id,e_id):
     b += 1
     Batch(
         item_id=item_id,
-        employee_id=e_id,
+        in_employee_id=e_id,
         sr_num=b,
         batch_name=b,
     ).save()
