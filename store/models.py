@@ -8,7 +8,7 @@ class Shift(models.Model):
     working_status = models.IntegerField(default=0,null=True)
 
 class In_item(models.Model):
-    #shift = models.ForeignKey(Shift,on_delete=models.PROTECT,default=None, null=True)
+    shift = models.ForeignKey(Shift,on_delete=models.PROTECT,default=None, null=True)
     in_employee = models.ForeignKey(In_employee,on_delete=models.PROTECT,default=True,null=True)
     operator = models.ForeignKey(Operator,on_delete=models.PROTECT,default=True,null=True)
     machine = models.ForeignKey(Machine,on_delete=models.PROTECT,default=True,null=True)

@@ -56,7 +56,7 @@ def search_in_item(request):
     else:
         return redirect('login')
 
-
+ 
 def item_in(request,item_id):
     if request.session.has_key('in_mobile'):
         in_mobile = request.session['in_mobile']
@@ -189,6 +189,7 @@ def operator_home(request):
         context={}
         if e:
             running_shift = Shift.objects.filter(operator_id=e.id,working_status=1).first()
+            print(running_shift.id)
             machine = Machine.objects.filter(status=1,working_status=0)
             if 'create_shift'in request.POST:
                 machine_id = request.POST.get('machine_id')
