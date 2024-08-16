@@ -10,6 +10,7 @@ class Employee(models.Model):
 
 class Machine(models.Model):
     name = models.CharField(max_length=200)
+    working_status = models.IntegerField(default=0,null=True)
     status = models.IntegerField(default=1)
 
 class Operator(models.Model):

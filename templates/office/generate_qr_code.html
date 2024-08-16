@@ -138,7 +138,7 @@
 
     function tag_limit(){
         tag_qty = document.getElementById('tag_qty').value;
-        if( tag_qty > 100){
+        if( tag_qty > 25){
             document.getElementById('tag_qty').value='';
         }
     }
@@ -181,6 +181,7 @@
         </div>
     </div> `
       $("#tag_result").html(temp);
+      $("html, body").animate({ scrollTop: 0 }, "fast");
   }
 
 </script>

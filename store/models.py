@@ -1,7 +1,14 @@
 from django.db import models
 from office.models import *
 # Create your models here.
+
+class Shift(models.Model):
+    operator = models.ForeignKey(Operator,on_delete=models.PROTECT,default=True,null=True)
+    machine = models.ForeignKey(Machine,on_delete=models.PROTECT,default=True,null=True)
+    working_status = models.IntegerField(default=0,null=True)
+
 class In_item(models.Model):
+    #shift = models.ForeignKey(Shift,on_delete=models.PROTECT,default=None, null=True)
     in_employee = models.ForeignKey(In_employee,on_delete=models.PROTECT,default=True,null=True)
     operator = models.ForeignKey(Operator,on_delete=models.PROTECT,default=True,null=True)
     machine = models.ForeignKey(Machine,on_delete=models.PROTECT,default=True,null=True)
@@ -35,4 +42,7 @@ class Out_item(models.Model):
     verify_by = models.ForeignKey(Employee,on_delete=models.PROTECT,null=True)
     scan_type = models.CharField(max_length=100, null=True)
 
-
+class Select_operator_item(models.Model):
+    operator = models.ForeignKey(Operator,on_delete=models.PROTECT,default=True,null=True)
+    item = models.ForeignKey(Item,on_delete=models.PROTECT,default=True,null=True)
+    

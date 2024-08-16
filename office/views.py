@@ -18,7 +18,7 @@ def office_dashboard(request):
         if e:
             i=Item.objects.all()
             for i in i:
-                ti = In_item.objects.filter(item_id=i.id,date__gte=date.today(),date__lte=date.today()).order_by('-id').first()
+                ti = Select_operator_item.objects.filter(item_id=i.id,).order_by('-id').first()
                 if ti:
                     ti_item.append(ti)
                 ########################
@@ -30,7 +30,7 @@ def office_dashboard(request):
             'e':e,
             't':ti_item,
             'all_stock_list':all_stock_list,
-            'machine_list':Machine.objects.filter(status=1)
+            'shift':Shift.objects.filter(working_status=1)
         }
         return render(request, 'office/office_dashboard.html', context)
     else:

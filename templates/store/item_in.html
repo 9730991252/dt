@@ -98,6 +98,7 @@
     <input type="hidden" id="machine_id" value="{{e.operator.machine_id}}">
     <input type="hidden" id="b_id" value="{{b_id.id}}">
     <input type="hidden" id="item_id" value="{{i.id}}">
+    <input type="hidden" id="shift_id" value="{{sh.id}}">
     {% include 'include/alert.html' %}
     
 </div>
@@ -134,8 +135,8 @@
         <h6 class="todays_production">Todays Production </h6>
     </div>
     <div class="product_main_box container" id="todays_production">
-            <div class="text-center"><b>{{i.name}} &nbsp;&nbsp;&nbsp; {% today_production_employee i.id e.id %}</b></div>
-            <div>{% today_production_in_tag i.id e.id %}</div>
+            <div class="text-center"><b>{{i.name}} &nbsp;&nbsp;&nbsp; {% today_production_employee i.id e.id sh.id %}</b></div>
+            <div>{% today_production_in_tag i.id e.id sh.id %}</div>
     </div>
     <br><br><br>
 </div>
@@ -162,6 +163,7 @@ let operator_id = document.getElementById('operator_id').value;
 let machine_id = document.getElementById('machine_id').value;
 let b_id = document.getElementById('b_id').value;
 let item_id = document.getElementById('item_id').value;
+let shift_id = document.getElementById('shift_id').value;
 function onScanSuccess(c){
 
     if(c !== last_ruselt){
@@ -177,6 +179,7 @@ function onScanSuccess(c){
                 item_id:item_id,
                 operator_id:operator_id,
                 machine_id:machine_id,
+                shift_id:shift_id
         },
         success: function(res){
             document.getElementById('last_ruselt').innerHTML=`${res.i_name}&nbsp&nbspTag&nbsp${c}`
@@ -260,6 +263,7 @@ var html5QrcodeScanner = new Html5QrcodeScanner(
                 item_id:item_id,
                 operator_id:operator_id,
                 machine_id:machine_id,
+                shift_id:shift_id
         },
         success: function(res){
             document.getElementById('last_ruselt').innerHTML=`${res.i_name}&nbsp&nbspTag&nbsp${c}`

@@ -1,0 +1,140 @@
+{% extends 'home/base.html' %}
+{% load store_tag %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+<style>
+    .all_helper{
+        text-align: center;
+        margin-left: 10px ;
+        margin-right: 10px ;
+        color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        height: 30px;
+    }
+    .all_item{
+        text-align: center;
+        margin-left: 10px ;
+        margin-right: 10px ;
+        color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        height: 30px;
+    }
+    .hide_item{
+        display: none;
+    }
+</style>
+<div class="container">
+    <div class=""><h>Welcome - {{e.name}}</h></div>
+    {% include 'include/alert.html' %}
+    
+</div>
+
+{% include 'include/operator_menu.html' %}
+
+
+
+
+
+<div class="text-center"><h6>Machine Name- <b>{{e.machine.name}}</b></h6></div>
+{% if close == 0 %}
+
+<!-- Button trigger modal -->
+<div class="text-center"><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Close Shift</button></div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Shift Close Conformation</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="POST"> {% csrf_token %}
+                <input id="secret_pin" type="hidden" value="{{e.pin}}">
+                
+                <div class="alert alert-danger">
+                    Close Before Shift check all counting items
+                </div>
+                <input type="number" oninput="check_delete_pin()" id="enter_pin" class="form-control " placeholder="Enter Secret Pin"><br>
+                <button type="submit" data-bs-dismiss="modal" class="btn btn-danger" id="conform_btn" style="display: none;" name="Close_shift" type="submit">confirm close</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+    <div class="text-center "><b>Your Selected Production Item</b></div>
+    {% for i in selected_item %}
+    <div class="all_helper alert alert-success">
+        <div>{{i.item.name}}</div>
+        <div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="id"><button type="submit" class="btn btn-transparent btn-sm" name="De_select_item" >&#10060;</button></form></div>
+     </div>
+     {% endfor %}
+     <hr>
+    
+       <div class="text-center "><b>Your Selected Helper</b></div>
+       {% for i in in_employee_selected %}
+       <div class="all_helper alert alert-success">
+           <div>{{i.name}}</div>
+           <div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="in_employee_id"><button type="submit" class="btn btn-transparent btn-sm" name="De_select_helper" >&#10060;</button></form></div>
+        </div>
+        {% endfor %}
+        <hr>
+{% endif %}
+    
+
+
+
+
+
+
+
+
+
+    <div class="text-center "><b>Available Helper</b></div>
+    {% for i in in_employee %}
+    <div class="all_helper alert alert-warning">
+        <div>{{i.name}}</div>
+        {% if in_employee_selected_count < e.helper_limit %}<div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="in_employee_id"><button type="submit" class="btn btn-transparent btn-sm" name="select_helper" >&#10004;</button></form></div>{% endif %}
+    </div>
+    {% endfor %}
+    
+    <hr>
+    
+    <div class="text-center "><b>Select Production Item</b></div>
+    {% for i in item %}
+    {% hide_operator_item i.id e.id as hide_item %}
+        <div class="all_item alert alert-warning {% if hide_item == True %}hide_item{% endif %}">
+            <div>{{i.name}}</div>
+            <div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="item_id"><button type="submit" class="btn btn-transparent btn-sm" name="select_item" >&#10004;</button></form></div>
+        </div>
+    {% endfor %}
+
+<Script>
+      function check_delete_pin(){
+    pin = document.getElementById('secret_pin').value;
+    enter_pin = document.getElementById('enter_pin').value;
+    console.log(enter_pin)
+    if (pin == enter_pin){
+      document.getElementById('conform_btn').style.display='';
+    }
+    if (pin != enter_pin){
+      document.getElementById('conform_btn').style.display='none';
+    }
+
+  }
+</Script>
+    
+
+{% endblock content %}

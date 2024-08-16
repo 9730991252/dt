@@ -1,0 +1,14 @@
+{% load store_tag %}
+<style>
+    .gride{
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 5px;
+    }
+</style>
+
+<div class="gride">
+    {% for in_e  in in_e  %}
+        <div>{{in_e.name}} Total - {% helper_production in_e.id shift.id %}</div>
+    {% endfor %}
+</div>

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from office.models import *
 from django.template.loader import render_to_string
 from django.http import *
@@ -48,13 +48,14 @@ def in_item(request):
         machine_id = request.GET['machine_id']
         batch_id = request.GET['b_id']
         item_id = request.GET['item_id']
+        shift_id = request.GET['shift_id']
         qr = Qr_code.objects.filter(tag_number=tag_number).first()
         if qr:
             qr_count = Qr_code.objects.filter(batch_id=batch_id).count()
             if qr_count < 1000:
                 if qr.in_status == 0 and qr.out_status == 0:
                     #* success
-                    in_item_save(tag_number,employee_id,item_id,batch_id,qr_count,operator_id,machine_id,scan_type=1)
+                    in_item_save(shift_id,tag_number,employee_id,item_id,batch_id,qr_count,operator_id,machine_id,scan_type=1)
                     status = 1
                 if qr.in_status == 1:
                     #*Qr Code Already Scaned
@@ -71,7 +72,8 @@ def in_item(request):
         i_name = item.name
         context={
             'i':item,
-            'e':employee_id
+            'e':employee_id,
+            'shift_id':shift_id
                 }
         t = render_to_string('ajax/store/today_production.html', context)
     return JsonResponse({'t':t, 'status':status, 'i_name':i_name}) 
@@ -84,13 +86,14 @@ def in_item_manual(request):
         item_id = request.GET['item_id']
         operator_id = request.GET['operator_id']
         machine_id = request.GET['machine_id']
+        shift_id = request.GET['shift_id']
         qr = Qr_code.objects.filter(tag_number=tag_number).first()
         if qr:
             qr_count = Qr_code.objects.filter(batch_id=batch_id).count()
             if qr_count < 1000:
                 if qr.in_status == 0 and qr.out_status == 0:
                     #* success
-                    in_item_save(tag_number,employee_id,item_id,batch_id,qr_count,operator_id,machine_id,scan_type=0)
+                    in_item_save(shift_id,tag_number,employee_id,item_id,batch_id,qr_count,operator_id,machine_id,scan_type=0)
                     status = 1
                 if qr.in_status == 1:
                     #*Qr Code Already Scaned
@@ -107,30 +110,37 @@ def in_item_manual(request):
         i_name = item.name
         context={
             'i':item,
-            'e':employee_id
+            'e':employee_id,
+            'shift_id':shift_id
                 }
         t = render_to_string('ajax/store/today_production.html', context)
     return JsonResponse({'t':t, 'status':status, 'i_name':i_name}) 
 
-def in_item_save(tag_number,employee_id,item_id,batch_id,sr_num,operator_id,machine_id,scan_type):
+def in_item_save(shift_id,tag_number,employee_id,item_id,batch_id,sr_num,operator_id,machine_id,scan_type):
     #print('tag_num = ',tag_number,  'eid = ',employee_id, 'item_id =', item_id,  'scan_type = ', scan_type)
     qr = Qr_code.objects.filter(tag_number=tag_number).first()
     sr_num += 1
-    In_item(
-        in_employee_id=employee_id,
-        qr_code_id=qr.id,
-        item_id=item_id,
-        tag_number=tag_number,
-        status=1,
-        operator_id=operator_id,
-        machine_id=machine_id,
-        scan_type=scan_type,
-    ).save()
-    qr.in_status =1
-    qr.batch_id = batch_id
-    qr.item_id = item_id
-    qr.sr_num = sr_num
-    qr.save()
+    check = In_employee.objects.get(id=employee_id)
+    if check.working_status == 1:
+        In_item(
+            in_employee_id=employee_id,
+            qr_code_id=qr.id,
+            item_id=item_id,
+            tag_number=tag_number,
+            status=1,
+            operator_id=operator_id,
+            machine_id=machine_id,
+            scan_type=scan_type,
+            shift_id=shift_id,
+        ).save()
+        qr.in_status =1
+        qr.batch_id = batch_id
+        qr.item_id = item_id
+        qr.sr_num = sr_num
+        qr.save()
+ 
+
+
 def search_tag(request):
     if request.method == 'GET':
         tag_num = request.GET['tag_num']
@@ -255,7 +265,7 @@ def search_item(request):
     if request.method == 'GET':
         words = request.GET['words']
         p = ''
-        if len(words) > 2:
+        if len(words) > 1:
             p=Item.objects.filter(name__icontains=words)[0:10]
         context={
             'pro':p

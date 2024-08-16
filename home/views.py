@@ -11,6 +11,13 @@ def index(request):
     #Batch.objects.all().delete()
     #Item.objects.all().delete()
     #Operator.objects.all().delete()
+    #Shift.objects.all().delete()
+
+    #******************
+
+    #m = Machine.objects.filter(working_status=1).first()
+    #m.working_status = 0
+    #m.save()
     return render(request, 'home/index.html')
 
 def login(request):

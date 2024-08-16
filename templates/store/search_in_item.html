@@ -62,7 +62,7 @@
     {% endif %}
     {% for i in in_stock_list %}
     <div class="in_stock_list mb-2">
-       <div> {{i.item.name}} &nbsp;&nbsp; {% today_production_employee i.item_id e.id %}  </div>
+       <div> {{i.item.name}} &nbsp;&nbsp; {% today_production_employee i.item_id e.id shift.id %}  </div>
        <a href="/store/item_in/{{i.item_id}}" class="btn btn-primary btn-sm">Add More</a>
     </div>
     {% endfor %}
@@ -71,9 +71,9 @@
 
 
       {% for i in item %}
-      <a href="/store/item_in/{{i.id}}">
+      <a href="/store/item_in/{{i.item_id}}">
       <div class="item_all_list my-2" >
-        <div>{{i.name}}</div>
+        <div>{{i.item.name}}</div>
         
       </div>
     </a>

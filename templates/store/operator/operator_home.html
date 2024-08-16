@@ -1,18 +1,50 @@
 {% extends 'home/base.html' %}
+{% load store_tag %}
 {% block head %}
 {% endblock head %}
 {% block content %}
 <style>
-    .all_helper{
+    .all_machine{
         text-align: center;
         margin-left: 10px ;
         margin-right: 10px ;
         color: black;
+        background-color: rgb(194, 255, 236);
+        margin-bottom: 10PX;
+        height: 30px;
+        font-weight: 700;
         display: flex;
         justify-content: center;
-        align-items: center;
+    }
+    .running_shift{
+        background-color: rgb(223, 255, 220);
+        margin-left: 10px;
+        margin-right: 10px;
         gap: 10px;
-        height: 30px;
+        font-weight: 700;
+        
+    }
+    a{
+        text-decoration: none;
+        color: black;
+    }
+    .item_box{
+        margin-left: 10px;
+        margin-right: 10px;
+        background-color:  rgb(227, 197, 255);
+        margin-bottom: 10px;
+        text-align: center;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+    .em_box{
+        margin-left: 10px;
+        margin-right: 10px;
+        background-color:  rgb(255, 240, 197);
+        margin-bottom: 10px;
+        text-align: center;
+        font-weight: 700;
+        margin-top: 10px;
     }
 </style>
 <div class="container">
@@ -22,21 +54,42 @@
 </div>
 
 {% include 'include/operator_menu.html' %}
-
-<div class="text-center"><h6>Machine Name- <b>{{e.machine.name}}</b></h6></div>
-
-{% for i in in_employee_selected %}
-<div class="all_helper alert alert-success">
-    <div>{{i.name}}</div>
-    <div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="in_employee_id"><button type="submit" class="btn btn-transparent btn-sm" name="De_select_helper" >&#10060;</button></form></div>
-</div>
-{% endfor %}
-<hr>
-{% for i in in_employee %}
-    <div class="all_helper alert alert-warning">
-        <div>{{i.name}}</div>
-        {% if in_employee_selected_count < e.helper_limit %}<div><form method="POST">{% csrf_token %}<input type="hidden" value="{{i.id}}" name="in_employee_id"><button type="submit" class="btn btn-transparent btn-sm" name="select_helper" >&#10004;</button></form></div>{% endif %}
+{% if running_shift %}
+<br>
+    <a href="/store/select_helper/{{running_shift.id}}"><div class="text-center running_shift"> <i>Your Running Shift On <br> {{ running_shift.machine.name }}</i></div></a>
+{% else %}
+    <h6 class="text-center">Start Shift With Available Machine</h6>
+    <div class="text-center">
+        {% for m in machine %}
+            <div class="all_machine">
+                <div>{{m.name}}</div>
+                <div><form method="POST">{% csrf_token %}<input type="hidden" value="{{m.id}}" name="machine_id"><button type="submit" class="btn btn-transparent btn-sm" name="create_shift" >&#10004;</button></form></div>
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
+{% endif %}
 
-{% endblock content %}
+<div class="text-center"><h6><b><i>Todays Production &nbsp;&nbsp;&nbsp;  Total - {% operator_all_production e.id running_shift.id %}</i></b></h6></div>
+
+{% for s in selected_item %}
+
+    <div class="item_box">
+        <div>{{s.item.name}} &nbsp;&nbsp;&nbsp;  Total - {% operator_production s.item_id e.id running_shift.id %}</div>
+        <div>{% operator_production_list s.item_id e.id running_shift.id %}</div>
+    </div>
+    
+    {% endfor %}
+    
+    <hr>
+    
+    {% for i in in_employee %}
+    <div class="em_box">
+        <div>{{i.name}} &nbsp;&nbsp;&nbsp;  Total - {% helper_production i.id running_shift.id %}</div>
+        <div>{% helper_production_list i.id running_shift.id %}</div>
+    </div>
+    {% endfor %}
+    
+    
+    
+    
+    {% endblock content %}

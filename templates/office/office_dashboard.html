@@ -36,6 +36,7 @@
     text-align: center;
     background-color: rgb(224, 233, 255);
     border-radius: 10px;
+    margin-bottom: 10px;
 }
 @media only screen and (max-width: 500px) {
     .Todays_Production{
@@ -75,10 +76,12 @@
         <!--* Todays_Production *-->
         <div class="Todays_Production">Todays Production</div>
         {% if t|length == 0 %}No Production Added Today{% endif %}
-        <div class="container">
-            {% for m in machine_list %}
+        <div class="container"> 
+            {% for m in shift %}
                 <div class="machine_list">
-                    {{m.name}} &nbsp;&nbsp;&nbsp; {% today_production_machine m.id %}
+                    <div><b>{{m.machine.name}}</b> &nbsp;&nbsp;&nbsp; <strong>{% today_production_machine m.machine.id m.id %}</strong></div>
+                    <div><b><i>{{m.operator.name}}</i></b></div>
+                    <div>{% all_helper m.operator_id %}</div>
                 </div>
             {% endfor %}
         </div>
@@ -105,7 +108,7 @@
               </div>
     </div>
 </div>
-
+ 
 
 
   
