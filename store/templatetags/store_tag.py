@@ -40,7 +40,7 @@ def today_production_machine(m_id,shift_id):
         qty = In_item.objects.filter(machine_id=m_id,shift_id=shift_id).count()
         return qty
 
-
+ 
 @register.inclusion_tag('inclusion_tag/store/today_production_tag.html')
 def today_production_in_tag(id, e_id,shift_id):
     if shift_id :
@@ -66,7 +66,7 @@ def operator_production(item_id, operator_id, shift_id):
 @register.inclusion_tag('inclusion_tag/store/operator/operator_production_list.html')
 def operator_production_list(item_id, operator_id, shift_id):
     if shift_id :
-        tag = In_item.objects.filter(item_id=item_id,operator_id=operator_id,shift_id=shift_id)
+        tag = In_item.objects.filter(item_id=item_id,operator_id=operator_id,shift_id=shift_id).order_by('tag_number')
         return {
             'tag':tag
         }
@@ -81,7 +81,7 @@ def helper_production(helper_id, shift_id):
 @register.inclusion_tag('inclusion_tag/store/operator/operator_production_list.html')
 def helper_production_list(helper_id, shift_id):
     if shift_id :
-        tag = In_item.objects.filter(in_employee_id=helper_id,shift_id=shift_id)
+        tag = In_item.objects.filter(in_employee_id=helper_id,shift_id=shift_id).order_by('tag_number')
         return {
             'tag':tag
         }
