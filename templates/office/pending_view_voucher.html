@@ -2,8 +2,32 @@
 {% block title %} Office Dashboard{% endblock title %}
 {% block content %}
 {% load office_tag %}
-
+{% load store_tag %}
 <style>
+
+*{margin: 0; padding: 0;
+box-sizing: border-box;
+}
+.item_list_head{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr ;
+    font-weight: 600;
+}
+.item_list_content{
+    padding: 5px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr ;
+    .item_name{
+        font-weight: 500;
+    }
+   
+  
+}
+.tag_list{
+    text-align: center;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+}
 </style>
 </style>
 <div class="container employee_name">
@@ -19,7 +43,7 @@
             {% include 'include/verify_menu.html' %}  
             <!--* content -->
             <div class="text-center">
-                <h6>Voucher Name {{v.name}}</h6>
+                <h6>Voucher Name &nbsp;	&nbsp;	 {{v.name}} &nbsp;	&nbsp;	Total Bandle {% total_bandle_voucher v.id %}</h6>
                 <form method="POST">{% csrf_token %}
                     <div style="display: flex; justify-content: center;gap: 20px;">
                         <input type="text" placeholder="Voucher Name" name="new_name_v" required>
@@ -28,33 +52,27 @@
                 </form>
             </div>
             <div class="container">
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Product name</th>
-                    <th scope="col">Tag</th>
-                    <th scope="col">Employee Name</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Total Qty</th>
-                    <th scope="col">Verify By</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
+        <div class="item_list_head">
+                    <div>Item name</div>
+                    <div>Total Qty</div>
+                    <div>Employee Name</div>
+                    <div>Date</div>
+                    <div>Verify By</div>
+                    <div>Action</div>
+                </div>
                     {% for q in q %}
-                  <tr>
-                    <td>{{q.item.name}}</td>
-                    <td>{{q.tag_number}}</td>
-                    <td>{{q.out_employee.name}}</td>
-                    <td>{{q.generate_date}}</td>
-                    <td>Total Qty {% out_voucher_qty q.item_id q.voucher_id %}</td>
-                    <td> {% if q.verify_by == None %} {% else %}{{q.verify_by.name}}{% endif %}</td>
-                    <td><form class="" method="POST">{% csrf_token %}{% if q.verify_status == 0 %}<input type="hidden" name="qid" value="{{q.id}}"><button class="btn btn-success btn-sm my-1" type="submit" name="Verify">Accepte</button>{% else %}Accepted{% endif %}</form></td>
-                  </tr>
+                    <div class="item_list_content">
+                    <div class="item_name">{{q.item.name}}</div>
+                    <div>Total Qty {% out_voucher_qty q.item_id q.voucher_id %}</div>
+                    <div>{{q.out_employee.name}}</div>
+                    <div>{{q.generate_date}}</div>
+                    <div> {% if q.verify_by == None %} {% else %}{{q.verify_by.name}}{% endif %}</div>
+                    <div><form class="" method="POST">{% csrf_token %}{% if q.verify_status == 0 %}<input type="hidden" name="item_id" value="{{q.item_id}}"><button class="btn btn-success btn-sm my-1" type="submit" name="Verify">Accepte</button>{% else %}Accepted{% endif %}</form></div>
+                </div>
+                <div class="tag_list">tag{% out_tag_list q.voucher_id q.item_id %}</div>
                   {% endfor %}
-                </tbody>
-            </table>
-        </div>
+          
+                </div>
         <div>
             <form class="" method="POST">{% csrf_token %}
                 {% if a == b %}
@@ -65,7 +83,7 @@
             <!--// end content //-->
         </div>
     </div>
-</div>
+
 <script>
 </script>
 {% endblock content %}

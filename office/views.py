@@ -22,7 +22,6 @@ def office_dashboard(request):
                 if ti:
                     ti_item.append(ti)
                 ########################
-                print(i.id)
                 s = In_item.objects.filter(item_id=i.id,status=1).first()
                 if s:
                     all_stock_list.append(s)
@@ -377,20 +376,28 @@ def pending_view_voucher(request,id):
     if request.session.has_key('office_mobile'):
         office_mobile = request.session['office_mobile']        
         e=Employee.objects.filter(mobile=office_mobile).first()
+        item=[]
         if e:
             v = Voucher_name.objects.get(id=id)
             q = Out_item.objects.filter(voucher_id=id).order_by('item_id')
             a = Out_item.objects.filter(voucher_id=id,verify_status=1).count()
             b = Out_item.objects.filter(voucher_id=id).count()
+            ite = Item.objects.all()
+            if ite :
+                for ite in ite :
+                    itm=Out_item.objects.filter(voucher_id=id,item_id=ite.id).first()
+                    if itm:
+                        item.append(itm)
             if 'Verify' in request.POST:
-                qid = request.POST.get('qid')
-                q = Out_item.objects.get(id=qid)
-                if q.verify_status == 0:
-                    q.verify_status = 1 
-                    q.verify_by_id = e.id
-                    q.verify_date = datetime.datetime.now()
-                    q.save()
-                    return redirect(f'/office/pending_view_voucher/{id}')
+                item_id = request.POST.get('item_id')
+                qr = Out_item.objects.filter(voucher_id=id,item_id=item_id,verify_status=0)
+                if qr:
+                    for q in qr:
+                        q.verify_status = 1 
+                        q.verify_by_id = e.id
+                        q.verify_date = datetime.datetime.now()
+                        q.save()
+                return redirect(f'/office/pending_view_voucher/{id}')
             if 'Voucher_Verify' in request.POST:
                 v = Voucher_name.objects.get(id=id)
                 v.verify_by_id = e.id
@@ -407,7 +414,7 @@ def pending_view_voucher(request,id):
                 return redirect(f'/office/pending_view_voucher/{id}')
         context={
             'e':e,
-            'q':q,
+            'q':item,
             'a':a,
             'b':b,
             'v':v

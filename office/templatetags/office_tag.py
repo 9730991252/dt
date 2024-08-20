@@ -8,6 +8,12 @@ def out_voucher_qty(id,v_id):
     qty = Out_item.objects.filter(item_id=id,voucher_id=v_id).count()
     return qty
 
+
+@register.simple_tag
+def total_bandle_voucher(voucher_id):
+    qty = Out_item.objects.filter(voucher_id=voucher_id).count()
+    return qty
+
 @register.simple_tag
 def all_stock_count(id):
     return In_item.objects.filter(item_id=id,status=1).count()
