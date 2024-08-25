@@ -20,18 +20,18 @@ def index(request):
     #m.save()
 
     #*********************
-    #shift = Shift.objects.all()
-    #if shift:
-    #    for s in shift:
-    #        s.date = None
-    #        s.save()
+    shift = Shift.objects.all()
+    if shift:
+        for s in shift:
+            s.date = None
+            s.save()
 
     #*********************
-    #shift = Shift.objects.all()
-    #if shift:
-    #    for s in shift:
-    #        s.generate_date = None
-    #        s.save()
+    shift = Shift.objects.all()
+    if shift:
+        for s in shift:
+            s.generate_date = None
+            s.save()
 
     return render(request, 'home/index.html')
 
