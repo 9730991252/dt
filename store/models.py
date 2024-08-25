@@ -6,6 +6,8 @@ class Shift(models.Model):
     operator = models.ForeignKey(Operator,on_delete=models.PROTECT,default=True,null=True)
     machine = models.ForeignKey(Machine,on_delete=models.PROTECT,default=True,null=True)
     working_status = models.IntegerField(default=0,null=True)
+    generate_date = models.DateTimeField(auto_now_add=True,null=True)
+    date = models.DateField(auto_now_add=True,null=True)
 
 class In_item(models.Model):
     shift = models.ForeignKey(Shift,on_delete=models.PROTECT,default=None, null=True)
@@ -25,7 +27,7 @@ class Voucher_name(models.Model):
     out_employee = models.ForeignKey(Out_employee,on_delete=models.PROTECT,default=True,null=True)
     name = models.CharField(max_length=200)
     verify_by = models.ForeignKey(Employee,on_delete=models.PROTECT,null=True)
-    verify_status = models.IntegerField(null=True,max_length=100)
+    verify_status = models.IntegerField(null=True)
     verify_date = models.DateTimeField(null=True)
     date = models.DateTimeField(auto_now_add=True,null=True)
 

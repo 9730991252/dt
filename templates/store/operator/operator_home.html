@@ -73,23 +73,20 @@
 
 {% for s in selected_item %}
 
-    <div class="item_box">
-        <div>{{s.item.name}} &nbsp;&nbsp;&nbsp;  Total - {% operator_production s.item_id e.id running_shift.id %}</div>
-        <div>{% operator_production_list s.item_id e.id running_shift.id %}</div>
-    </div>
-    
-    {% endfor %}
-    
-    <hr>
-    
-    {% for i in in_employee %}
-    <div class="em_box">
-        <div>{{i.name}} &nbsp;&nbsp;&nbsp;  Total - {% helper_production i.id running_shift.id %}</div>
-        <div>{% helper_production_list i.id running_shift.id %}</div>
-    </div>
-    {% endfor %}
-    
-    
-    
-    
+<div class="item_box">
+    <div>{{s.item.name}} &nbsp;&nbsp;&nbsp;  Total - {% operator_production s.item_id e.id running_shift.id %}</div>
+    <div>{% operator_production_list s.item_id e.id running_shift.id %}</div>
+</div>
+
+{% endfor %}
+
+<hr>
+
+{% for i in in_employee %}
+<div class="em_box">
+    <div>{{i.name}} &nbsp;&nbsp;&nbsp;  Total - {% helper_production i.id running_shift.id %}</div>
+    <div>{% helper_production_list i.id running_shift.id %}</div>
+</div>
+{% endfor %}
+
     {% endblock content %}

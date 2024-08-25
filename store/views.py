@@ -181,6 +181,20 @@ def select_helper(request, shift_id):
         return render(request, 'store/operator/select_helper.html', context)
     else:
         return redirect('login')
+    
+
+def operator_shift(request):
+    if request.session.has_key('operator_mobile'):
+        operator_mobile = request.session['operator_mobile']
+        e=Operator.objects.filter(mobile=operator_mobile,status=1).first()
+        context={}
+        if e:
+            pass
+        return render(request, 'store/operator/operator_shift.html', context)
+    else:
+        return redirect('login')
+    
+
 
 def operator_home(request):
     if request.session.has_key('operator_mobile'):

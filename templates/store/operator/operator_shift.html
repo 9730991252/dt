@@ -1,0 +1,15 @@
+{% extends 'home/base.html' %}
+{% load store_tag %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+
+<div class="container">
+    <div class=""><h>Welcome - {{e.name}}</h></div>
+    {% include 'include/alert.html' %}
+    
+</div>
+
+{% include 'include/operator_menu.html' %}
+
+{% endblock content %}

@@ -16,7 +16,7 @@ def office_dashboard(request):
         all_stock_list = []
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
-            i=Item.objects.all()
+            i=Item.objects.all().order_by('sr_num')
             for i in i:
                 ti = Select_operator_item.objects.filter(item_id=i.id,).order_by('-id').first()
                 if ti:

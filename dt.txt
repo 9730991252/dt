@@ -134,7 +134,7 @@ server{
     listen 80;
     listen [::]:80;
 
-    server_name dtf.narayaniorder.com www.dtf.narayaniorder.com;
+    server_name demo.narayaniorder.com www.demo.narayaniorder.com;
     client_max_body_size 500M;
 
     location = /favicon.ico { access_log off; log_not_found off; }
