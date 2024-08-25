@@ -12,27 +12,6 @@ def index(request):
     #Item.objects.all().delete()
     #Operator.objects.all().delete()
     #Shift.objects.all().delete()
-
-    #******************
-
-    #m = Machine.objects.filter(working_status=1).first()
-    #m.working_status = 0
-    #m.save()
-
-    #*********************
-    shift = Shift.objects.all()
-    if shift:
-        for s in shift:
-            s.date = None
-            s.save()
-
-    #*********************
-    shift = Shift.objects.all()
-    if shift:
-        for s in shift:
-            s.generate_date = None
-            s.save()
-
     return render(request, 'home/index.html')
 
 def login(request):
