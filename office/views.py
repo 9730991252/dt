@@ -489,7 +489,7 @@ def in_report(request):
         e=Employee.objects.filter(mobile=office_mobile).first()
         if e:
             s = Shift.objects.all().order_by('-id')
-            paginator = Paginator(s,3) 
+            paginator = Paginator(s,1000) 
             page_number = request.GET.get('page')
             s = paginator.get_page(page_number)
             total_pages = s.paginator.num_pages
