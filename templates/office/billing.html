@@ -1,0 +1,62 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+</style>
+<style>
+    .billing_head{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.592);
+    }
+    .billing_content{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            font-weight: 400;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.262);
+        }
+</style>
+<div class="container">
+    <div class=""><h>Welcome - {{e.name}}</h></div>
+</div>
+<div class="container my-3">
+    <div class="row">
+            <div class="col-2 ">
+                {% include 'include/office_menu.html' %}  
+            </div>
+            <div class="col-10">
+                {% include 'include/alert.html' %}
+                {% include 'include/report_menu.html' %}
+                <div class="billing_head">
+                    <div>Generate Date</div>
+                    <div>From date</div>
+                    <div>To Date</div>
+                    <div>Total In</div>
+                    <div>Total Out</div>
+                    <div>Hosting</div>
+                    <div>Total</div>
+                    <div>Paid date</div>
+                    <div>Status</div>
+                </div>
+                {% for u in bill %}
+                    <div class="billing_content">
+                        <div>{{u.generate_date}}</div>
+                        <div>{{u.from_date}}</div>
+                        <div>{{u.to_date}}</div>
+                        <div>Tag {{u.total_in}}</div>
+                        <div>Tag {{u.total_out}}</div>
+                        <div>Rs. 2000</div>
+                        <div>Rs.{{u.total}}</div>
+                        {% if u.status == 1 %}<div>{{u.paid_date}}</div>{% else %}<div>First Pay Bill</div>{% endif %}
+                        <div>{% if u.status == 1 %}Paid{% else %}Un Paid{% endif %}</div>
+                    </div>
+                {% endfor %}
+            </div>
+    </div>
+</div>
+{% endblock content %}

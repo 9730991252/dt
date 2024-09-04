@@ -92,3 +92,14 @@ def operator_all_production(operator_id, shift_id):
         qty = In_item.objects.filter(operator_id=operator_id,shift_id=shift_id).count()
         return qty
 
+@register.simple_tag
+def last_shift_all_item(item_id, shift_id):
+    if shift_id :
+        qty = In_item.objects.filter(item_id=item_id,shift_id=shift_id).count()
+        return qty
+
+@register.simple_tag
+def last_shift_all_helper_total(helper_id, shift_id):
+    if shift_id :
+        qty = In_item.objects.filter(in_employee_id=helper_id,shift_id=shift_id).count()
+        return qty

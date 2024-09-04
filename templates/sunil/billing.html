@@ -1,0 +1,154 @@
+{% extends 'home/base.html' %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+    <style>
+        .billing_head{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.592);
+        }
+        .billing_content{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            font-weight: 400;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.262);
+        }
+    </style>
+{% include 'include/alert.html' %}
+<div class="container mt-2">
+  <a class="btn btn-primary" href="/sunil/add_employee_sunil/">Add Employee</a>
+  <a class="btn btn-warning" href="/sunil/billing/">Billing</a>
+</div>
+<div class="container">
+    <form method="POST">{% csrf_token %}
+        <div class="form_box row">
+            <div class="col-6">
+                <div class="text-center"><h6><b>Frome Date</b></h6></div>
+                <input required type="date" class="form-control" style="margin-left: auto;margin-right: auto; width: 200px;" name="from_date">
+            </div>
+            <div class="col-6">
+                <div class="text-center"><h6><b>To Date</b></h6></div>
+                <input required type="date" class="form-control" style="margin-left: auto;margin-right: auto; width: 200px;" name="to_date">
+            </div>
+        </div>
+        <div class="text-center"><button class="btn btn-info" name="Search">Search</button></div>
+    </form>
+</div>
+{% if total %}
+<div class="container my-3">
+    <div class="billing_head">
+        <div>Generate Date</div>
+        <div>From date</div>
+        <div>To Date</div>
+        <div>Total In</div>
+        <div>Total Out</div>
+        <div>Hosting</div>
+        <div>Total</div>
+        <div>Status</div>
+    </div>
+    <div class="billing_content">
+        <div>{{date_today}}</div>
+        <div>{{from_date}}</div>
+        <div>{{to_date}}</div>
+        <div>Tag {{in_count}}</div>
+        <div>Tag {{out_count}}</div>
+        <div>Rs. 2000</div>
+        <div>Rs.{{total}}</div>
+        <div>Status</div>
+    </div>
+</div>
+<div>
+    <form method="POST">{% csrf_token %}
+        <input required type="hidden" value="{{from_date}}" class="form-control" name="from_date">
+        <input required type="hidden" value="{{to_date}}" class="form-control" name="to_date">
+        <input type="hidden" name="in_count" value="{{in_count}}">
+        <input type="hidden" name="out_count" value="{{out_count}}">
+        <input type="hidden" name="total" value="{{total}}">
+    <div class="text-center"><button class="btn btn-danger" name="Generate_bill">Ganerate Bill</button></div>    
+    </form>
+</div>
+
+
+
+
+
+
+
+{% endif %}
+
+<br>
+{% if un_paid %}
+<div class="text-center">
+    <div class="alert alert-danger" style="width: 85%; margin-left: auto; margin-right: auto; font-weight: 500;" >Un Paid</div>
+</div>
+
+
+<div class="container my-3">
+    <div class="billing_head">
+        <div>Generate Date</div>
+        <div>From date</div>
+        <div>To Date</div>
+        <div>Total In</div>
+        <div>Total Out</div>
+        <div>Hosting</div>
+        <div>Total</div>
+        <div>Action</div>
+    </div>
+    {% for u in un_paid %}
+    <div class="billing_content">
+        <div>{{u.generate_date}}</div>
+        <div>{{u.from_date}}</div>
+        <div>{{u.to_date}}</div>
+        <div>Tag {{u.total_in}}</div>
+        <div>Tag {{u.total_out}}</div>
+        <div>Rs. 2000</div>
+        <div>Rs.{{u.total}}</div>
+        <div class="text-center"><form method="POST">{% csrf_token %}<input type="hidden" name="bill_id" value="{{u.id}}"><button class="btn btn-danger" name="Pay_bill">Pay</button></form></div>    
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
+
+<br>
+{% if paid %}
+<div class="text-center">
+    <div  style="width: 85%; margin-left: auto; margin-right: auto; font-weight: 500;" >Paid</div>
+</div>
+
+
+<div class="container my-3">
+    <div class="billing_head">
+        <div>Generate Date</div>
+        <div>From date</div>
+        <div>To Date</div>
+        <div>Total In</div>
+        <div>Total Out</div>
+        <div>Hosting</div>
+        <div>Total</div>
+        <div>Paid Date</div>
+    </div>
+    {% for u in paid %}
+    <div class="billing_content">
+        <div>{{u.generate_date}}</div>
+        <div>{{u.from_date}}</div>
+        <div>{{u.to_date}}</div>
+        <div>Tag {{u.total_in}}</div>
+        <div>Tag {{u.total_out}}</div>
+        <div>Rs. 2000</div>
+        <div>Rs.{{u.total}}</div> 
+        <div>{{u.paid_date}}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
+{% endblock content %}

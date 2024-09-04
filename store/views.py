@@ -187,9 +187,31 @@ def operator_shift(request):
     if request.session.has_key('operator_mobile'):
         operator_mobile = request.session['operator_mobile']
         e=Operator.objects.filter(mobile=operator_mobile,status=1).first()
+        in_item = []
+        helper = []
         context={}
         if e:
-            pass
+            shift = Shift.objects.filter(operator_id=e.id).last()
+            in_item_count = In_item.objects.filter(shift_id=shift.id).count()
+            item = Item.objects.all()
+            if item:
+                for i in item:
+                    it = In_item.objects.filter(item_id = i.id,operator_id=e.id,shift_id = shift.id).first()
+                    if it:
+                        in_item.append(it)
+            in_employee = In_employee.objects.all()
+            if in_employee:
+                for ie in in_employee:
+                    he = In_item.objects.filter(in_employee_id=ie.id,operator_id=e.id,shift_id = shift.id).first()
+                    if he:
+                        helper.append(he)
+            context={
+                'e':e,
+                'shift':shift,
+                'in_item_count':in_item_count,
+                'in_item':in_item,
+                'helper':helper
+            }
         return render(request, 'store/operator/operator_shift.html', context)
     else:
         return redirect('login')

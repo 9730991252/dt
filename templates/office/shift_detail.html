@@ -1,0 +1,45 @@
+{% extends 'home/base.html' %}
+{% load store_tag %}
+{% block content %}
+<style>
+    *{
+        margin: 0             ;
+        padding: 0            ;
+        box-sizing: border-box;
+    }
+    .shift{
+        border: 1px solid black;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+        width: 80%;
+    } 
+</style>
+<div class="container">
+    <div class=""><h>Welcome - {{e.name}}</h></div>
+</div>
+<div class="container my-3">
+    <div class="row">
+            <div class="col-2 ">
+                {% include 'include/office_menu.html' %}  
+            </div>
+            <div class="col-10">
+                {% include 'include/alert.html' %}
+                {% include 'include/report_menu.html' %}
+                <div class="text-center shift">
+                    <h6>Shift Number - {{ shift.id }} </h6>
+                    <h6>Date - {{ shift.date }} </h6>
+                    <h6>Machine Name - {{ shift.machine.name }} </h6>
+                    <h6>Operator Name - {{ shift.operator.name }} </h6>
+                    <h6> Total - {{ in_item_count }}</h6><hr>
+                    {% for i in in_item %}
+                        <h6> Item - {{ i.item.name }} Total - {% last_shift_all_item i.item_id shift.id %}</h6>
+                    {% endfor %}<hr>
+                    {% for h in helper %}
+                        <h6> Helpers - {{ h.in_employee.name }} Total - {% last_shift_all_helper_total h.in_employee_id shift.id %}</h6>
+                    {% endfor %}
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock content %}

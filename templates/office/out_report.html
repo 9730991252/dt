@@ -1,0 +1,20 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<style>
+
+</style>
+<div class="container">
+    <div class=""><h>Welcome - {{e.name}}</h></div>
+</div>
+<div class="container my-3">
+    <div class="row">
+            <div class="col-2 ">
+                {% include 'include/office_menu.html' %}  
+            </div>
+            <div class="col-10">
+                {% include 'include/alert.html' %}
+                {% include 'include/report_menu.html' %}
+            </div>
+    </div>
+</div>
+{% endblock content %}

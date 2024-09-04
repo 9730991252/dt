@@ -15,6 +15,6 @@
     <a  href="/office/verify_qr_code" class=" my-1 {% if request.path == '/office/verify_qr_code' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Verify QR Code</a>
     <a  href="/office/employee/" class="my-1 {% if request.path == '/office/employee/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Employee</a>
     <a  href="/office/item/" class="my-1 {% if request.path == '/office/item/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Item</a>
-    <a  href="/office/report/" class="my-1 {% if request.path == '/office/report/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Report</a>
+    <a  href="/office/report/" class="my-1 {% if request.path == '/office/report/' %}btn btn-warning{% elif request.path == '/office/billing/' %}btn btn-warning{% elif request.path == '/office/out_report/' %}btn btn-warning{% elif request.path == '/office/in_report/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Report</a>
     <a href="/office_logout/" class="btn btn-danger my-1">Logout</a>
 </div>

@@ -11,4 +11,8 @@ urlpatterns = [
     path('accepted_verify_qr_code', views.accepted_verify_qr_code,name='accepted_verify_qr_code'),
     path('accepted_view_voucher/<int:id>', views.accepted_view_voucher,name='accepted_view_voucher'),
     path('report/', views.report,name='report'),
+    path('in_report/', views.in_report,name='in_report'),
+    path('out_report/', views.out_report,name='out_report'),
+    path('shift_detail/<int:shift_id>', views.shift_detail,name='shift_detail'),
+    path('billing/', views.billing,name='billing'),
 ]

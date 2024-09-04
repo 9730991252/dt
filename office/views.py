@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from office.models import *
 from store.models import *
+from sunil.models import *
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 from datetime import timedelta, date
 from django.core.paginator import Paginator
-from django.utils import timezone
 # Create your views here.
 def office_dashboard(request):
     if request.session.has_key('office_mobile'):
@@ -29,7 +29,7 @@ def office_dashboard(request):
             'e':e,
             't':ti_item,
             'all_stock_list':all_stock_list,
-            'shift':Shift.objects.filter(working_status=1)
+            'shift':Shift.objects.filter(working_status=1),
         }
         return render(request, 'office/office_dashboard.html', context)
     else:
@@ -483,12 +483,90 @@ def report(request):
     else:
         return redirect('login')
 
+def in_report(request):
+    if request.session.has_key('office_mobile'):
+        office_mobile = request.session['office_mobile']        
+        e=Employee.objects.filter(mobile=office_mobile).first()
+        if e:
+            s = Shift.objects.all().order_by('-id')
+            paginator = Paginator(s,3) 
+            page_number = request.GET.get('page')
+            s = paginator.get_page(page_number)
+            total_pages = s.paginator.num_pages
+        context={
+            'e':e,
+            's': s,
+            'last_page':total_pages,
+            'total_page_list':[n+1 for n in range(total_pages)][0:3]
+        }
+        return render(request,'office/in_report.html',context=context)        
+    else:
+        return redirect('login')
 
 
+def out_report(request):
+    if request.session.has_key('office_mobile'):
+        office_mobile = request.session['office_mobile']        
+        e=Employee.objects.filter(mobile=office_mobile).first()
+        if e:
+            pass
+        context={
+            'e':e,
+        }
+        return render(request,'office/out_report.html',context=context)        
+    else:
+        return redirect('login')
+
+
+def shift_detail(request, shift_id):
+    if request.session.has_key('office_mobile'):
+        office_mobile = request.session['office_mobile']        
+        e=Employee.objects.filter(mobile=office_mobile).first()
+        in_item = []
+        helper = []
+        if e:
+            shift = Shift.objects.get(id=shift_id)
+            in_item_count = In_item.objects.filter(shift_id=shift.id).count()
+            item = Item.objects.all()
+            if item:
+                for i in item:
+                    it = In_item.objects.filter(item_id = i.id,operator_id=e.id,shift_id = shift.id).first()
+                    if it:
+                        in_item.append(it)
+            in_employee = In_employee.objects.all()
+            if in_employee:
+                for ie in in_employee:
+                    he = In_item.objects.filter(in_employee_id=ie.id,operator_id=e.id,shift_id = shift.id).first()
+                    if he:
+                        helper.append(he)
+        context={
+                'e':e,
+                'shift':shift,
+                'in_item_count':in_item_count,
+                'in_item':in_item,
+                'helper':helper
+        }
+        return render(request,'office/shift_detail.html',context=context)        
+    else:
+        return redirect('login')
     
  
+def billing(request):
+    if request.session.has_key('office_mobile'):
+        office_mobile = request.session['office_mobile']        
+        e=Employee.objects.filter(mobile=office_mobile).first()
+        if e:
+            pass
+        context={
+            'e':e,
+            'bill':Billing.objects.all()
+        }
+        return render(request,'office/billing.html',context=context)        
+    else:
+        return redirect('login')
 
 
 
 
 
+  
